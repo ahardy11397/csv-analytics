@@ -1,3 +1,4 @@
 data/
 *_bin
 tests/tmp/
+.superpowers/

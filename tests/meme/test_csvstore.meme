@@ -1,0 +1,68 @@
+# Tests for csvstore: registry persistence (hand-written JSON, built-in reader),
+# corrupt-file tolerance, find/upsert semantics. Unique scratch paths, cleaned up.
+use csvstore
+
+test registry_roundtrip:
+    create directory "tests/tmp"
+    define t1: Table as Table(name="sales", content="a,b\n1,2\n")
+    define t2: Table as Table(name="weird", content="n\n\"x,y\"\n")
+    define t3: Table as Table(name="bslash", content="a\\b\n")
+    define tables: List<Table> as [t1, t2, t3]
+    call save_registry("tests/tmp/t_reg1.json", tables)
+    define loaded: List<Table> as load_registry("tests/tmp/t_reg1.json")
+    assert length of loaded == 3
+    define found: Optional<Table> as find_table(loaded, "weird")
+    assert found is not nothing
+    define w: Table as value of found
+    assert w.content == "n\n\"x,y\"\n"
+    define found3: Optional<Table> as find_table(loaded, "bslash")
+    define b: Table as value of found3
+    assert b.content == "a\\b\n"
+    delete file "tests/tmp/t_reg1.json"
+
+test registry_missing_file_empty:
+    define loaded: List<Table> as load_registry("tests/tmp/t_no_such_reg.json")
+    assert length of loaded == 0
+
+test registry_corrupt_tolerance:
+    create directory "tests/tmp"
+    write file "tests/tmp/t_corrupt_reg.json" with "[{not json at all"
+    define loaded: List<Table> as load_registry("tests/tmp/t_corrupt_reg.json")
+    assert length of loaded == 0
+    delete file "tests/tmp/t_corrupt_reg.json"
+
+test upsert_replaces_and_appends:
+    define t1: Table as Table(name="sales", content="a\n1\n")
+    define t2: Table as Table(name="other", content="b\n2\n")
+    define tables: List<Table> as [t1, t2]
+    define replacement: Table as Table(name="sales", content="a\n9\n")
+    define out: List<Table> as upsert_table(tables, replacement)
+    assert length of out == 2
+    define found: Optional<Table> as find_table(out, "sales")
+    define s: Table as value of found
+    assert s.content == "a\n9\n"
+    define extra: Table as Table(name="third", content="c\n3\n")
+    define out2: List<Table> as upsert_table(out, extra)
+    assert length of out2 == 3
+    define found2: Optional<Table> as find_table(out2, "other")
+    define o: Table as value of found2
+    assert o.content == "b\n2\n"
+
+test find_missing_returns_nothing:
+    define tables: List<Table> as empty List<Table>
+    define found: Optional<Table> as find_table(tables, "nope")
+    assert found is nothing
+
+test json_escape:
+    define s: String as "a\"b\\c\nd"
+    assert escape_json(s) == "a\\\"b\\\\c\\nd"
+
+test registry_json_shape:
+    define t1: Table as Table(name="sales", content="a,b\n1,2\n")
+    define tables: List<Table> as [t1]
+    define j: String as registry_to_json(tables)
+    assert j == "[\n  {\"name\": \"sales\", \"content\": \"a,b\\n1,2\\n\"}\n]\n"
+
+test registry_json_empty:
+    define tables: List<Table> as empty List<Table>
+    assert registry_to_json(tables) == "[]"

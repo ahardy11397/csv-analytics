@@ -1,0 +1,67 @@
+# csvstore.meme — table registry persistence.
+# A loaded table is stored as its name plus the raw CSV text; rows are parsed
+# in-language when needed (JSON record fields cannot be lists, and the built-in
+# JSON writer fails on string fields containing a literal quote).
+# The registry file is valid JSON: an array of {"name": ..., "content": ...}
+# objects, written with escape_json and read with the built-in JSON reader.
+
+record Table:
+    name: String
+    content: String
+
+function escape_json(s: String) -> String:
+    define out as ""
+    define n as length of string s
+    for i from 0 to n - 1:
+        define c as char at i of s
+        if c == "\"":
+            set out to out + "\\\""
+        else if c == "\\":
+            set out to out + "\\\\"
+        else if c == "\n":
+            set out to out + "\\n"
+        else if c == "\r":
+            set out to out + "\\r"
+        else if c == "\t":
+            set out to out + "\\t"
+        else:
+            set out to out + c
+    return out
+
+function registry_to_json(tables: List<Table>) -> String:
+    if length of tables == 0:
+        return "[]"
+    define out as "[\n"
+    for i from 0 to length of tables - 1:
+        define t as tables[i]
+        set out to out + "  {\"name\": \"" + escape_json(t.name) + "\", \"content\": \"" + escape_json(t.content) + "\"}"
+        if i < length of tables - 1:
+            set out to out + ","
+        set out to out + "\n"
+    set out to out + "]\n"
+    return out
+
+function save_registry(path: String, tables: List<Table>) -> Void:
+    write file path with registry_to_json(tables)
+
+function load_registry(path: String) -> List<Table>:
+    if not (file exists path):
+        return empty List<Table>
+    define loaded: Optional<List<Table>> as read json records Table from file path or else nothing
+    if loaded is nothing:
+        return empty List<Table>
+    return value of loaded
+
+function find_table(tables: List<Table>, name: String) -> Optional<Table>:
+    for each t in tables:
+        if t.name == name:
+            return optional t
+    return nothing
+
+function upsert_table(tables: List<Table>, t: Table) -> List<Table>:
+    define out as empty List<Table>
+    for each existing in tables:
+        if not (existing.name == t.name):
+            add existing to out
+    add t to out
+    return out

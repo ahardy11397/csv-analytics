@@ -1,0 +1,6 @@
+region,amount,qty
+"east",10,1
+"west",20,2
+east,5,3
+north,7,1
+"west,-3",-3,2

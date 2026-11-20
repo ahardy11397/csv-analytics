@@ -1,0 +1,109 @@
+# Tests for csvparse: RFC-4180-lite parsing (quoted fields, CRLF, blank lines)
+# and CSV row rendering.
+use csvparse
+
+test parse_simple:
+    define rows: List<List<String>> as parse_csv("a,b\n1,2\n")
+    assert length of rows == 2
+    assert rows[0][0] == "a"
+    assert rows[0][1] == "b"
+    assert rows[1][0] == "1"
+    assert rows[1][1] == "2"
+
+test parse_quoted_comma_and_quotes:
+    define rows: List<List<String>> as parse_csv("name,note\n\"x,y\",\"say \"\"hi\"\"\"\n")
+    assert rows[1][0] == "x,y"
+    assert rows[1][1] == "say \"hi\""
+
+test parse_quoted_embedded_newline:
+    define rows: List<List<String>> as parse_csv("a,b\n\"line1\nline2\",z\n")
+    assert rows[1][0] == "line1\nline2"
+    assert rows[1][1] == "z"
+
+test parse_crlf:
+    define rows: List<List<String>> as parse_csv("a,b\r\n1,2\r\n")
+    assert length of rows == 2
+    assert rows[0][1] == "b"
+    assert rows[1][0] == "1"
+    assert rows[1][1] == "2"
+
+test parse_no_trailing_newline:
+    define rows: List<List<String>> as parse_csv("a,b\n1,2")
+    assert length of rows == 2
+
+test parse_blank_line_skipped:
+    define rows: List<List<String>> as parse_csv("a,b\n\n1,2\n")
+    assert length of rows == 2
+
+test parse_empty_text:
+    define rows: List<List<String>> as parse_csv("")
+    assert length of rows == 0
+
+test parse_single_field_rows:
+    define rows: List<List<String>> as parse_csv("x\ny\n")
+    assert length of rows == 2
+    assert rows[0][0] == "x"
+    assert rows[1][0] == "y"
+
+test parse_empty_field_between_commas:
+    define rows: List<List<String>> as parse_csv("a,,c\n")
+    assert rows[0][0] == "a"
+    assert rows[0][1] == ""
+    assert rows[0][2] == "c"
+
+test rectangular_check:
+    assert rows_are_rectangular(parse_csv("a,b\n1,2\n"))
+    assert not (rows_are_rectangular(parse_csv("a,b\n1\n")))
+    assert rows_are_rectangular(parse_csv(""))
+
+test row_to_line_plain:
+    define row: List<String> as ["a", "b"]
+    assert csv_row_to_line(row) == "a,b"
+
+test row_to_line_quotes_and_commas:
+    define row: List<String> as ["x", "y,z", "a\"b", "p\nq"]
+    assert csv_row_to_line(row) == "x,\"y,z\",\"a\"\"b\",\"p\nq\""
+
+test row_to_line_single:
+    define row: List<String> as ["plain"]
+    assert csv_row_to_line(row) == "plain"
+
+test mid_field_quote_is_literal:
+    define rows: List<List<String>> as parse_csv("a,b\n1,x\"y\n2,3\n")
+    assert length of rows == 3
+    assert rows[1][0] == "1"
+    assert rows[1][1] == "x\"y"
+    assert rows[2][0] == "2"
+
+test post_close_text_is_kept:
+    define rows: List<List<String>> as parse_csv("\"a\"x\"b\",c\n")
+    assert length of rows == 1
+    assert rows[0][0] == "ax\"b\""
+    assert rows[0][1] == "c"
+
+test unterminated_quote_at_eof_tolerated:
+    define rows: List<List<String>> as parse_csv("a,\"b")
+    assert length of rows == 1
+    assert rows[0][0] == "a"
+    assert rows[0][1] == "b"
+
+test trailing_comma_row:
+    define rows: List<List<String>> as parse_csv("a,b,\n1,2,3\n")
+    assert length of rows == 2
+    assert length of rows[0] == 3
+    assert rows[0][2] == ""
+    assert rows[1][2] == "3"
+
+test lone_cr_line_end:
+    define rows: List<List<String>> as parse_csv("a,b\r1,2\r")
+    assert length of rows == 2
+    assert rows[1][1] == "2"
+
+test control_char_detection:
+    assert text_has_control_chars("a\x01b")
+    assert text_has_control_chars("form\x0cfeed")
+    assert not (text_has_control_chars("plain ascii"))
+    assert not (text_has_control_chars("tab\tok"))
+    assert not (text_has_control_chars("nl\nok"))
+    assert not (text_has_control_chars("cr\rok"))
+    assert not (text_has_control_chars(""))

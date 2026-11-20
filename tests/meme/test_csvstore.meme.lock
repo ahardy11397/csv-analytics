@@ -1,0 +1,2886 @@
+{
+  "lockfile_version": 1,
+  "entries": {
+    "tests/meme/test_csvstore.meme": {
+      "source_sha256": "412b95a6e22d08149ed37b7102fb9b651c60bb885448bb34bf0c1f8a0ea8b873",
+      "provider": "heuristic",
+      "resolutions": {},
+      "pending_ambiguities": [],
+      "draft_items": [
+        {
+          "op": "import_stmt",
+          "module": "csvstore",
+          "source_line": 3
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "registry_roundtrip",
+          "body": [
+            {
+              "op": "create_directory",
+              "path": {
+                "expr_type": "literal",
+                "value": "tests/tmp",
+                "data_type": "String"
+              },
+              "source_line": 6
+            },
+            {
+              "op": "var_decl",
+              "name": "t1",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "sales",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "a,b\n1,2\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 7
+            },
+            {
+              "op": "var_decl",
+              "name": "t2",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "weird",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "n\n\"x,y\"\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 8
+            },
+            {
+              "op": "var_decl",
+              "name": "t3",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "bslash",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "a\\b\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 9
+            },
+            {
+              "op": "var_decl",
+              "name": "tables",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "t1"
+                  },
+                  {
+                    "expr_type": "var_ref",
+                    "name": "t2"
+                  },
+                  {
+                    "expr_type": "var_ref",
+                    "name": "t3"
+                  }
+                ],
+                "element_type": "Table"
+              },
+              "source_line": 10
+            },
+            {
+              "op": "call_stmt",
+              "func_name": "save_registry",
+              "args": [
+                {
+                  "expr_type": "literal",
+                  "value": "tests/tmp/t_reg1.json",
+                  "data_type": "String"
+                },
+                {
+                  "expr_type": "var_ref",
+                  "name": "tables"
+                }
+              ],
+              "source_line": 11
+            },
+            {
+              "op": "var_decl",
+              "name": "loaded",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "load_registry",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "tests/tmp/t_reg1.json",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 12
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 3,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 13,
+              "source_text": "length of loaded == 3"
+            },
+            {
+              "op": "var_decl",
+              "name": "found",
+              "var_type": "Optional<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "find_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "weird",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 14
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "optional_is_nothing",
+                "target": {
+                  "expr_type": "var_ref",
+                  "name": "found"
+                },
+                "negated": true
+              },
+              "source_line": 15,
+              "source_text": "found is not nothing"
+            },
+            {
+              "op": "var_decl",
+              "name": "w",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "optional_unwrap",
+                "target": {
+                  "expr_type": "var_ref",
+                  "name": "found"
+                }
+              },
+              "source_line": 16
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "record_field",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "w"
+                  },
+                  "field_name": "content"
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "n\n\"x,y\"\n",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 17,
+              "source_text": "w.content == \"n\\n\\\"x,y\\\"\\n\""
+            },
+            {
+              "op": "var_decl",
+              "name": "found3",
+              "var_type": "Optional<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "find_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "bslash",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 18
+            },
+            {
+              "op": "var_decl",
+              "name": "b",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "optional_unwrap",
+                "target": {
+                  "expr_type": "var_ref",
+                  "name": "found3"
+                }
+              },
+              "source_line": 19
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "record_field",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "b"
+                  },
+                  "field_name": "content"
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a\\b\n",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 20,
+              "source_text": "b.content == \"a\\\\b\\n\""
+            },
+            {
+              "op": "delete_file",
+              "path": {
+                "expr_type": "literal",
+                "value": "tests/tmp/t_reg1.json",
+                "data_type": "String"
+              },
+              "source_line": 21
+            }
+          ],
+          "source_line": 5
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "registry_missing_file_empty",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "loaded",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "load_registry",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "tests/tmp/t_no_such_reg.json",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 24
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 25,
+              "source_text": "length of loaded == 0"
+            }
+          ],
+          "source_line": 23
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "registry_corrupt_tolerance",
+          "body": [
+            {
+              "op": "create_directory",
+              "path": {
+                "expr_type": "literal",
+                "value": "tests/tmp",
+                "data_type": "String"
+              },
+              "source_line": 28
+            },
+            {
+              "op": "write_file",
+              "filepath": {
+                "expr_type": "literal",
+                "value": "tests/tmp/t_corrupt_reg.json",
+                "data_type": "String"
+              },
+              "content": {
+                "expr_type": "literal",
+                "value": "[{not json at all",
+                "data_type": "String"
+              },
+              "source_line": 29
+            },
+            {
+              "op": "var_decl",
+              "name": "loaded",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "load_registry",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "tests/tmp/t_corrupt_reg.json",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 30
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 31,
+              "source_text": "length of loaded == 0"
+            },
+            {
+              "op": "delete_file",
+              "path": {
+                "expr_type": "literal",
+                "value": "tests/tmp/t_corrupt_reg.json",
+                "data_type": "String"
+              },
+              "source_line": 32
+            }
+          ],
+          "source_line": 27
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "upsert_replaces_and_appends",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "t1",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "sales",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "a\n1\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 35
+            },
+            {
+              "op": "var_decl",
+              "name": "t2",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "other",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "b\n2\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 36
+            },
+            {
+              "op": "var_decl",
+              "name": "tables",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "t1"
+                  },
+                  {
+                    "expr_type": "var_ref",
+                    "name": "t2"
+                  }
+                ],
+                "element_type": "Table"
+              },
+              "source_line": 37
+            },
+            {
+              "op": "var_decl",
+              "name": "replacement",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "sales",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "a\n9\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 38
+            },
+            {
+              "op": "var_decl",
+              "name": "out",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "upsert_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "tables"
+                  },
+                  {
+                    "expr_type": "var_ref",
+                    "name": "replacement"
+                  }
+                ]
+              },
+              "source_line": 39
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "out"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 40,
+              "source_text": "length of out == 2"
+            },
+            {
+              "op": "var_decl",
+              "name": "found",
+              "var_type": "Optional<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "find_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "out"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "sales",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 41
+            },
+            {
+              "op": "var_decl",
+              "name": "s",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "optional_unwrap",
+                "target": {
+                  "expr_type": "var_ref",
+                  "name": "found"
+                }
+              },
+              "source_line": 42
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "record_field",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "s"
+                  },
+                  "field_name": "content"
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a\n9\n",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 43,
+              "source_text": "s.content == \"a\\n9\\n\""
+            },
+            {
+              "op": "var_decl",
+              "name": "extra",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "third",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "c\n3\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 44
+            },
+            {
+              "op": "var_decl",
+              "name": "out2",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "upsert_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "out"
+                  },
+                  {
+                    "expr_type": "var_ref",
+                    "name": "extra"
+                  }
+                ]
+              },
+              "source_line": 45
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "out2"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 3,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 46,
+              "source_text": "length of out2 == 3"
+            },
+            {
+              "op": "var_decl",
+              "name": "found2",
+              "var_type": "Optional<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "find_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "out2"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "other",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 47
+            },
+            {
+              "op": "var_decl",
+              "name": "o",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "optional_unwrap",
+                "target": {
+                  "expr_type": "var_ref",
+                  "name": "found2"
+                }
+              },
+              "source_line": 48
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "record_field",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "o"
+                  },
+                  "field_name": "content"
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "b\n2\n",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 49,
+              "source_text": "o.content == \"b\\n2\\n\""
+            }
+          ],
+          "source_line": 34
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "find_missing_returns_nothing",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "tables",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [],
+                "element_type": "Table"
+              },
+              "source_line": 52
+            },
+            {
+              "op": "var_decl",
+              "name": "found",
+              "var_type": "Optional<Table>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "find_table",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "tables"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "nope",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 53
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "optional_is_nothing",
+                "target": {
+                  "expr_type": "var_ref",
+                  "name": "found"
+                },
+                "negated": false
+              },
+              "source_line": 54,
+              "source_text": "found is nothing"
+            }
+          ],
+          "source_line": 51
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "json_escape",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "s",
+              "var_type": "String",
+              "value": {
+                "expr_type": "literal",
+                "value": "a\"b\\c\nd",
+                "data_type": "String"
+              },
+              "source_line": 57
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "call",
+                  "func_name": "escape_json",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "s"
+                    }
+                  ]
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a\\\"b\\\\c\\nd",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 58,
+              "source_text": "escape_json(s) == \"a\\\\\\\"b\\\\\\\\c\\\\nd\""
+            }
+          ],
+          "source_line": 56
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "registry_json_shape",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "t1",
+              "var_type": "Table",
+              "value": {
+                "expr_type": "record_literal",
+                "record_name": "Table",
+                "fields": [
+                  {
+                    "name": "name",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "sales",
+                      "data_type": "String"
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "a,b\n1,2\n",
+                      "data_type": "String"
+                    }
+                  }
+                ]
+              },
+              "source_line": 61
+            },
+            {
+              "op": "var_decl",
+              "name": "tables",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "t1"
+                  }
+                ],
+                "element_type": "Table"
+              },
+              "source_line": 62
+            },
+            {
+              "op": "var_decl",
+              "name": "j",
+              "var_type": "String",
+              "value": {
+                "expr_type": "call",
+                "func_name": "registry_to_json",
+                "args": [
+                  {
+                    "expr_type": "var_ref",
+                    "name": "tables"
+                  }
+                ]
+              },
+              "source_line": 63
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "var_ref",
+                  "name": "j"
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "[\n  {\"name\": \"sales\", \"content\": \"a,b\\n1,2\\n\"}\n]\n",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 64,
+              "source_text": "j == \"[\\n  {\\\"name\\\": \\\"sales\\\", \\\"content\\\": \\\"a,b\\\\n1,2\\\\n\\\"}\\n]\\n\""
+            }
+          ],
+          "source_line": 60
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "registry_json_empty",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "tables",
+              "var_type": "List<Table>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [],
+                "element_type": "Table"
+              },
+              "source_line": 67
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "call",
+                  "func_name": "registry_to_json",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    }
+                  ]
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "[]",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 68,
+              "source_text": "registry_to_json(tables) == \"[]\""
+            }
+          ],
+          "source_line": 66
+        }
+      ],
+      "canonical_meme": "use csvstore\ntest registry_roundtrip:\n    create directory \"tests/tmp\"\n    define t1: Table as Table(name=\"sales\", content=\"a,b\\n1,2\\n\")\n    define t2: Table as Table(name=\"weird\", content=\"n\\n\\\"x,y\\\"\\n\")\n    define t3: Table as Table(name=\"bslash\", content=\"a\\\\b\\n\")\n    define list tables as [t1, t2, t3]\n    call save_registry(\"tests/tmp/t_reg1.json\", tables)\n    define list loaded as load_registry(\"tests/tmp/t_reg1.json\")\n    assert length of loaded == 3\n    define found: Optional<Table> as find_table(loaded, \"weird\")\n    assert found is not nothing\n    define w: Table as value of found\n    assert w.content == \"n\\n\\\"x,y\\\"\\n\"\n    define found3: Optional<Table> as find_table(loaded, \"bslash\")\n    define b: Table as value of found3\n    assert b.content == \"a\\\\b\\n\"\n    delete file \"tests/tmp/t_reg1.json\"\ntest registry_missing_file_empty:\n    define list loaded as load_registry(\"tests/tmp/t_no_such_reg.json\")\n    assert length of loaded == 0\ntest registry_corrupt_tolerance:\n    create directory \"tests/tmp\"\n    write file \"tests/tmp/t_corrupt_reg.json\" with \"[{not json at all\"\n    define list loaded as load_registry(\"tests/tmp/t_corrupt_reg.json\")\n    assert length of loaded == 0\n    delete file \"tests/tmp/t_corrupt_reg.json\"\ntest upsert_replaces_and_appends:\n    define t1: Table as Table(name=\"sales\", content=\"a\\n1\\n\")\n    define t2: Table as Table(name=\"other\", content=\"b\\n2\\n\")\n    define list tables as [t1, t2]\n    define replacement: Table as Table(name=\"sales\", content=\"a\\n9\\n\")\n    define list out as upsert_table(tables, replacement)\n    assert length of out == 2\n    define found: Optional<Table> as find_table(out, \"sales\")\n    define s: Table as value of found\n    assert s.content == \"a\\n9\\n\"\n    define extra: Table as Table(name=\"third\", content=\"c\\n3\\n\")\n    define list out2 as upsert_table(out, extra)\n    assert length of out2 == 3\n    define found2: Optional<Table> as find_table(out2, \"other\")\n    define o: Table as value of found2\n    assert o.content == \"b\\n2\\n\"\ntest find_missing_returns_nothing:\n    define list tables as empty List<Table>\n    define found: Optional<Table> as find_table(tables, \"nope\")\n    assert found is nothing\ntest json_escape:\n    define s: String as \"a\\\"b\\\\c\\nd\"\n    assert escape_json(s) == \"a\\\\\\\"b\\\\\\\\c\\\\nd\"\ntest registry_json_shape:\n    define t1: Table as Table(name=\"sales\", content=\"a,b\\n1,2\\n\")\n    define list tables as [t1]\n    define j: String as registry_to_json(tables)\n    assert j == \"[\\n  {\\\"name\\\": \\\"sales\\\", \\\"content\\\": \\\"a,b\\\\n1,2\\\\n\\\"}\\n]\\n\"\ntest registry_json_empty:\n    define list tables as empty List<Table>\n    assert registry_to_json(tables) == \"[]\"",
+      "ir": {
+        "statements": [
+          {
+            "op": "import_stmt",
+            "module": "csvstore",
+            "source_line": 3
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "registry_roundtrip",
+            "body": [
+              {
+                "op": "create_directory",
+                "path": {
+                  "expr_type": "literal",
+                  "value": "tests/tmp",
+                  "data_type": "String"
+                },
+                "source_line": 6
+              },
+              {
+                "op": "var_decl",
+                "name": "t1",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "sales",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "a,b\n1,2\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 7
+              },
+              {
+                "op": "var_decl",
+                "name": "t2",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "weird",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "n\n\"x,y\"\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 8
+              },
+              {
+                "op": "var_decl",
+                "name": "t3",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "bslash",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "a\\b\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 9
+              },
+              {
+                "op": "var_decl",
+                "name": "tables",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "t1"
+                    },
+                    {
+                      "expr_type": "var_ref",
+                      "name": "t2"
+                    },
+                    {
+                      "expr_type": "var_ref",
+                      "name": "t3"
+                    }
+                  ],
+                  "element_type": "Table"
+                },
+                "source_line": 10
+              },
+              {
+                "op": "call_stmt",
+                "func_name": "save_registry",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "tests/tmp/t_reg1.json",
+                    "data_type": "String"
+                  },
+                  {
+                    "expr_type": "var_ref",
+                    "name": "tables"
+                  }
+                ],
+                "source_line": 11
+              },
+              {
+                "op": "var_decl",
+                "name": "loaded",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "load_registry",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "tests/tmp/t_reg1.json",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 12
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "loaded"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 3,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 13,
+                "source_text": "length of loaded == 3"
+              },
+              {
+                "op": "var_decl",
+                "name": "found",
+                "var_type": "Optional<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "find_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "loaded"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "weird",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 14
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "optional_is_nothing",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "found"
+                  },
+                  "negated": true
+                },
+                "source_line": 15,
+                "source_text": "found is not nothing"
+              },
+              {
+                "op": "var_decl",
+                "name": "w",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "optional_unwrap",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "found"
+                  }
+                },
+                "source_line": 16
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "record_field",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "w"
+                    },
+                    "field_name": "content"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "n\n\"x,y\"\n",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 17,
+                "source_text": "w.content == \"n\\n\\\"x,y\\\"\\n\""
+              },
+              {
+                "op": "var_decl",
+                "name": "found3",
+                "var_type": "Optional<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "find_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "loaded"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "bslash",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 18
+              },
+              {
+                "op": "var_decl",
+                "name": "b",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "optional_unwrap",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "found3"
+                  }
+                },
+                "source_line": 19
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "record_field",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "b"
+                    },
+                    "field_name": "content"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a\\b\n",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 20,
+                "source_text": "b.content == \"a\\\\b\\n\""
+              },
+              {
+                "op": "delete_file",
+                "path": {
+                  "expr_type": "literal",
+                  "value": "tests/tmp/t_reg1.json",
+                  "data_type": "String"
+                },
+                "source_line": 21
+              }
+            ],
+            "source_line": 5
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "registry_missing_file_empty",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "loaded",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "load_registry",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "tests/tmp/t_no_such_reg.json",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 24
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "loaded"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 25,
+                "source_text": "length of loaded == 0"
+              }
+            ],
+            "source_line": 23
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "registry_corrupt_tolerance",
+            "body": [
+              {
+                "op": "create_directory",
+                "path": {
+                  "expr_type": "literal",
+                  "value": "tests/tmp",
+                  "data_type": "String"
+                },
+                "source_line": 28
+              },
+              {
+                "op": "write_file",
+                "filepath": {
+                  "expr_type": "literal",
+                  "value": "tests/tmp/t_corrupt_reg.json",
+                  "data_type": "String"
+                },
+                "content": {
+                  "expr_type": "literal",
+                  "value": "[{not json at all",
+                  "data_type": "String"
+                },
+                "source_line": 29
+              },
+              {
+                "op": "var_decl",
+                "name": "loaded",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "load_registry",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "tests/tmp/t_corrupt_reg.json",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 30
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "loaded"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 31,
+                "source_text": "length of loaded == 0"
+              },
+              {
+                "op": "delete_file",
+                "path": {
+                  "expr_type": "literal",
+                  "value": "tests/tmp/t_corrupt_reg.json",
+                  "data_type": "String"
+                },
+                "source_line": 32
+              }
+            ],
+            "source_line": 27
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "upsert_replaces_and_appends",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "t1",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "sales",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "a\n1\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 35
+              },
+              {
+                "op": "var_decl",
+                "name": "t2",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "other",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "b\n2\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 36
+              },
+              {
+                "op": "var_decl",
+                "name": "tables",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "t1"
+                    },
+                    {
+                      "expr_type": "var_ref",
+                      "name": "t2"
+                    }
+                  ],
+                  "element_type": "Table"
+                },
+                "source_line": 37
+              },
+              {
+                "op": "var_decl",
+                "name": "replacement",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "sales",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "a\n9\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 38
+              },
+              {
+                "op": "var_decl",
+                "name": "out",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "upsert_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    },
+                    {
+                      "expr_type": "var_ref",
+                      "name": "replacement"
+                    }
+                  ]
+                },
+                "source_line": 39
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "out"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 40,
+                "source_text": "length of out == 2"
+              },
+              {
+                "op": "var_decl",
+                "name": "found",
+                "var_type": "Optional<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "find_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "out"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "sales",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 41
+              },
+              {
+                "op": "var_decl",
+                "name": "s",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "optional_unwrap",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "found"
+                  }
+                },
+                "source_line": 42
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "record_field",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "s"
+                    },
+                    "field_name": "content"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a\n9\n",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 43,
+                "source_text": "s.content == \"a\\n9\\n\""
+              },
+              {
+                "op": "var_decl",
+                "name": "extra",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "third",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "c\n3\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 44
+              },
+              {
+                "op": "var_decl",
+                "name": "out2",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "upsert_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "out"
+                    },
+                    {
+                      "expr_type": "var_ref",
+                      "name": "extra"
+                    }
+                  ]
+                },
+                "source_line": 45
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "out2"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 3,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 46,
+                "source_text": "length of out2 == 3"
+              },
+              {
+                "op": "var_decl",
+                "name": "found2",
+                "var_type": "Optional<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "find_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "out2"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "other",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 47
+              },
+              {
+                "op": "var_decl",
+                "name": "o",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "optional_unwrap",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "found2"
+                  }
+                },
+                "source_line": 48
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "record_field",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "o"
+                    },
+                    "field_name": "content"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "b\n2\n",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 49,
+                "source_text": "o.content == \"b\\n2\\n\""
+              }
+            ],
+            "source_line": 34
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "find_missing_returns_nothing",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "tables",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [],
+                  "element_type": "Table"
+                },
+                "source_line": 52
+              },
+              {
+                "op": "var_decl",
+                "name": "found",
+                "var_type": "Optional<Table>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "find_table",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "nope",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 53
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "optional_is_nothing",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "found"
+                  },
+                  "negated": false
+                },
+                "source_line": 54,
+                "source_text": "found is nothing"
+              }
+            ],
+            "source_line": 51
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "json_escape",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "s",
+                "var_type": "String",
+                "value": {
+                  "expr_type": "literal",
+                  "value": "a\"b\\c\nd",
+                  "data_type": "String"
+                },
+                "source_line": 57
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "call",
+                    "func_name": "escape_json",
+                    "args": [
+                      {
+                        "expr_type": "var_ref",
+                        "name": "s"
+                      }
+                    ]
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a\\\"b\\\\c\\nd",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 58,
+                "source_text": "escape_json(s) == \"a\\\\\\\"b\\\\\\\\c\\\\nd\""
+              }
+            ],
+            "source_line": 56
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "registry_json_shape",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "t1",
+                "var_type": "Table",
+                "value": {
+                  "expr_type": "record_literal",
+                  "record_name": "Table",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "sales",
+                        "data_type": "String"
+                      }
+                    },
+                    {
+                      "name": "content",
+                      "value": {
+                        "expr_type": "literal",
+                        "value": "a,b\n1,2\n",
+                        "data_type": "String"
+                      }
+                    }
+                  ]
+                },
+                "source_line": 61
+              },
+              {
+                "op": "var_decl",
+                "name": "tables",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "t1"
+                    }
+                  ],
+                  "element_type": "Table"
+                },
+                "source_line": 62
+              },
+              {
+                "op": "var_decl",
+                "name": "j",
+                "var_type": "String",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "registry_to_json",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    }
+                  ]
+                },
+                "source_line": 63
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "var_ref",
+                    "name": "j"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "[\n  {\"name\": \"sales\", \"content\": \"a,b\\n1,2\\n\"}\n]\n",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 64,
+                "source_text": "j == \"[\\n  {\\\"name\\\": \\\"sales\\\", \\\"content\\\": \\\"a,b\\\\n1,2\\\\n\\\"}\\n]\\n\""
+              }
+            ],
+            "source_line": 60
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "registry_json_empty",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "tables",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [],
+                  "element_type": "Table"
+                },
+                "source_line": 67
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "call",
+                    "func_name": "registry_to_json",
+                    "args": [
+                      {
+                        "expr_type": "var_ref",
+                        "name": "tables"
+                      }
+                    ]
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "[]",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 68,
+                "source_text": "registry_to_json(tables) == \"[]\""
+              }
+            ],
+            "source_line": 66
+          }
+        ],
+        "imported_definitions": [
+          {
+            "op": "record_def",
+            "name": "Table",
+            "fields": [
+              {
+                "name": "name",
+                "field_type": "String"
+              },
+              {
+                "name": "content",
+                "field_type": "String"
+              }
+            ],
+            "source_line": 8
+          },
+          {
+            "op": "func_def",
+            "name": "escape_json",
+            "params": [
+              {
+                "name": "s",
+                "param_type": "String"
+              }
+            ],
+            "return_type": "String",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "out",
+                "var_type": "String",
+                "value": {
+                  "expr_type": "literal",
+                  "value": "",
+                  "data_type": "String"
+                },
+                "source_line": 13
+              },
+              {
+                "op": "var_decl",
+                "name": "n",
+                "var_type": "Int",
+                "value": {
+                  "expr_type": "string_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "s"
+                  }
+                },
+                "source_line": 14
+              },
+              {
+                "op": "for_range",
+                "loop_var": "i",
+                "start": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                },
+                "end": {
+                  "expr_type": "binary_op",
+                  "op": "-",
+                  "left": {
+                    "expr_type": "var_ref",
+                    "name": "n"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "body": [
+                  {
+                    "op": "var_decl",
+                    "name": "c",
+                    "var_type": "String",
+                    "value": {
+                      "expr_type": "string_char_at",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "s"
+                      },
+                      "index": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      }
+                    },
+                    "source_line": 16
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\"",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "assign",
+                        "name": "out",
+                        "value": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "out"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": "\\\"",
+                            "data_type": "String"
+                          }
+                        },
+                        "source_line": 18
+                      }
+                    ],
+                    "else_body": [
+                      {
+                        "op": "if_stmt",
+                        "condition": {
+                          "expr_type": "binary_op",
+                          "op": "==",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "c"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": "\\",
+                            "data_type": "String"
+                          }
+                        },
+                        "then_body": [
+                          {
+                            "op": "assign",
+                            "name": "out",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "out"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": "\\\\",
+                                "data_type": "String"
+                              }
+                            },
+                            "source_line": 20
+                          }
+                        ],
+                        "else_body": [
+                          {
+                            "op": "if_stmt",
+                            "condition": {
+                              "expr_type": "binary_op",
+                              "op": "==",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "c"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": "\n",
+                                "data_type": "String"
+                              }
+                            },
+                            "then_body": [
+                              {
+                                "op": "assign",
+                                "name": "out",
+                                "value": {
+                                  "expr_type": "binary_op",
+                                  "op": "+",
+                                  "left": {
+                                    "expr_type": "var_ref",
+                                    "name": "out"
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": "\\n",
+                                    "data_type": "String"
+                                  }
+                                },
+                                "source_line": 22
+                              }
+                            ],
+                            "else_body": [
+                              {
+                                "op": "if_stmt",
+                                "condition": {
+                                  "expr_type": "binary_op",
+                                  "op": "==",
+                                  "left": {
+                                    "expr_type": "var_ref",
+                                    "name": "c"
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": "\r",
+                                    "data_type": "String"
+                                  }
+                                },
+                                "then_body": [
+                                  {
+                                    "op": "assign",
+                                    "name": "out",
+                                    "value": {
+                                      "expr_type": "binary_op",
+                                      "op": "+",
+                                      "left": {
+                                        "expr_type": "var_ref",
+                                        "name": "out"
+                                      },
+                                      "right": {
+                                        "expr_type": "literal",
+                                        "value": "\\r",
+                                        "data_type": "String"
+                                      }
+                                    },
+                                    "source_line": 24
+                                  }
+                                ],
+                                "else_body": [
+                                  {
+                                    "op": "if_stmt",
+                                    "condition": {
+                                      "expr_type": "binary_op",
+                                      "op": "==",
+                                      "left": {
+                                        "expr_type": "var_ref",
+                                        "name": "c"
+                                      },
+                                      "right": {
+                                        "expr_type": "literal",
+                                        "value": "\t",
+                                        "data_type": "String"
+                                      }
+                                    },
+                                    "then_body": [
+                                      {
+                                        "op": "assign",
+                                        "name": "out",
+                                        "value": {
+                                          "expr_type": "binary_op",
+                                          "op": "+",
+                                          "left": {
+                                            "expr_type": "var_ref",
+                                            "name": "out"
+                                          },
+                                          "right": {
+                                            "expr_type": "literal",
+                                            "value": "\\t",
+                                            "data_type": "String"
+                                          }
+                                        },
+                                        "source_line": 26
+                                      }
+                                    ],
+                                    "else_body": [
+                                      {
+                                        "op": "assign",
+                                        "name": "out",
+                                        "value": {
+                                          "expr_type": "binary_op",
+                                          "op": "+",
+                                          "left": {
+                                            "expr_type": "var_ref",
+                                            "name": "out"
+                                          },
+                                          "right": {
+                                            "expr_type": "var_ref",
+                                            "name": "c"
+                                          }
+                                        },
+                                        "source_line": 28
+                                      }
+                                    ],
+                                    "source_line": 25
+                                  }
+                                ],
+                                "source_line": 23
+                              }
+                            ],
+                            "source_line": 21
+                          }
+                        ],
+                        "source_line": 19
+                      }
+                    ],
+                    "source_line": 17
+                  }
+                ],
+                "source_line": 15
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "var_ref",
+                  "name": "out"
+                },
+                "source_line": 29
+              }
+            ],
+            "source_line": 12
+          },
+          {
+            "op": "func_def",
+            "name": "registry_to_json",
+            "params": [
+              {
+                "name": "tables",
+                "param_type": "List<Table>"
+              }
+            ],
+            "return_type": "String",
+            "body": [
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": "[]",
+                      "data_type": "String"
+                    },
+                    "source_line": 33
+                  }
+                ],
+                "else_body": [],
+                "source_line": 32
+              },
+              {
+                "op": "var_decl",
+                "name": "out",
+                "var_type": "String",
+                "value": {
+                  "expr_type": "literal",
+                  "value": "[\n",
+                  "data_type": "String"
+                },
+                "source_line": 34
+              },
+              {
+                "op": "for_range",
+                "loop_var": "i",
+                "start": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                },
+                "end": {
+                  "expr_type": "binary_op",
+                  "op": "-",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "body": [
+                  {
+                    "op": "var_decl",
+                    "name": "t",
+                    "var_type": "Table",
+                    "value": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "tables"
+                      },
+                      "index": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      }
+                    },
+                    "source_line": 36
+                  },
+                  {
+                    "op": "assign",
+                    "name": "out",
+                    "value": {
+                      "expr_type": "binary_op",
+                      "op": "+",
+                      "left": {
+                        "expr_type": "binary_op",
+                        "op": "+",
+                        "left": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "binary_op",
+                            "op": "+",
+                            "left": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "out"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": "  {\"name\": \"",
+                                "data_type": "String"
+                              }
+                            },
+                            "right": {
+                              "expr_type": "call",
+                              "func_name": "escape_json",
+                              "args": [
+                                {
+                                  "expr_type": "record_field",
+                                  "target": {
+                                    "expr_type": "var_ref",
+                                    "name": "t"
+                                  },
+                                  "field_name": "name"
+                                }
+                              ]
+                            }
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": "\", \"content\": \"",
+                            "data_type": "String"
+                          }
+                        },
+                        "right": {
+                          "expr_type": "call",
+                          "func_name": "escape_json",
+                          "args": [
+                            {
+                              "expr_type": "record_field",
+                              "target": {
+                                "expr_type": "var_ref",
+                                "name": "t"
+                              },
+                              "field_name": "content"
+                            }
+                          ]
+                        }
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\"}",
+                        "data_type": "String"
+                      }
+                    },
+                    "source_line": 37
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "<",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      },
+                      "right": {
+                        "expr_type": "binary_op",
+                        "op": "-",
+                        "left": {
+                          "expr_type": "list_length",
+                          "target": {
+                            "expr_type": "var_ref",
+                            "name": "tables"
+                          }
+                        },
+                        "right": {
+                          "expr_type": "literal",
+                          "value": 1,
+                          "data_type": "Int"
+                        }
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "assign",
+                        "name": "out",
+                        "value": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "out"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": ",",
+                            "data_type": "String"
+                          }
+                        },
+                        "source_line": 39
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 38
+                  },
+                  {
+                    "op": "assign",
+                    "name": "out",
+                    "value": {
+                      "expr_type": "binary_op",
+                      "op": "+",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "out"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\n",
+                        "data_type": "String"
+                      }
+                    },
+                    "source_line": 40
+                  }
+                ],
+                "source_line": 35
+              },
+              {
+                "op": "assign",
+                "name": "out",
+                "value": {
+                  "expr_type": "binary_op",
+                  "op": "+",
+                  "left": {
+                    "expr_type": "var_ref",
+                    "name": "out"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "]\n",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 41
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "var_ref",
+                  "name": "out"
+                },
+                "source_line": 42
+              }
+            ],
+            "source_line": 31
+          },
+          {
+            "op": "func_def",
+            "name": "save_registry",
+            "params": [
+              {
+                "name": "path",
+                "param_type": "String"
+              },
+              {
+                "name": "tables",
+                "param_type": "List<Table>"
+              }
+            ],
+            "return_type": "Void",
+            "body": [
+              {
+                "op": "write_file",
+                "filepath": {
+                  "expr_type": "var_ref",
+                  "name": "path"
+                },
+                "content": {
+                  "expr_type": "call",
+                  "func_name": "registry_to_json",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "tables"
+                    }
+                  ]
+                },
+                "source_line": 45
+              }
+            ],
+            "source_line": 44
+          },
+          {
+            "op": "func_def",
+            "name": "load_registry",
+            "params": [
+              {
+                "name": "path",
+                "param_type": "String"
+              }
+            ],
+            "return_type": "List<Table>",
+            "body": [
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "file_exists",
+                    "filepath": {
+                      "expr_type": "var_ref",
+                      "name": "path"
+                    }
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "list_literal",
+                      "elements": [],
+                      "element_type": "Table"
+                    },
+                    "source_line": 49
+                  }
+                ],
+                "else_body": [],
+                "source_line": 48
+              },
+              {
+                "op": "var_decl",
+                "name": "loaded",
+                "var_type": "Optional<List<Table>>",
+                "value": {
+                  "expr_type": "read_json_records",
+                  "record_name": "Table",
+                  "filepath": {
+                    "expr_type": "var_ref",
+                    "name": "path"
+                  },
+                  "default_val": {
+                    "expr_type": "optional_none"
+                  }
+                },
+                "source_line": 50
+              },
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "optional_is_nothing",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  },
+                  "negated": false
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "list_literal",
+                      "elements": [],
+                      "element_type": "Table"
+                    },
+                    "source_line": 52
+                  }
+                ],
+                "else_body": [],
+                "source_line": 51
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "optional_unwrap",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "loaded"
+                  }
+                },
+                "source_line": 53
+              }
+            ],
+            "source_line": 47
+          },
+          {
+            "op": "func_def",
+            "name": "find_table",
+            "params": [
+              {
+                "name": "tables",
+                "param_type": "List<Table>"
+              },
+              {
+                "name": "name",
+                "param_type": "String"
+              }
+            ],
+            "return_type": "Optional<Table>",
+            "body": [
+              {
+                "op": "for_each",
+                "item_var": "t",
+                "index_var": null,
+                "collection": "tables",
+                "body": [
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "record_field",
+                        "target": {
+                          "expr_type": "var_ref",
+                          "name": "t"
+                        },
+                        "field_name": "name"
+                      },
+                      "right": {
+                        "expr_type": "var_ref",
+                        "name": "name"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "return_stmt",
+                        "value": {
+                          "expr_type": "optional_wrap",
+                          "value": {
+                            "expr_type": "var_ref",
+                            "name": "t"
+                          }
+                        },
+                        "source_line": 58
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 57
+                  }
+                ],
+                "source_line": 56
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "optional_none"
+                },
+                "source_line": 59
+              }
+            ],
+            "source_line": 55
+          },
+          {
+            "op": "func_def",
+            "name": "upsert_table",
+            "params": [
+              {
+                "name": "tables",
+                "param_type": "List<Table>"
+              },
+              {
+                "name": "t",
+                "param_type": "Table"
+              }
+            ],
+            "return_type": "List<Table>",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "out",
+                "var_type": "List<Table>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [],
+                  "element_type": "Table"
+                },
+                "source_line": 62
+              },
+              {
+                "op": "for_each",
+                "item_var": "existing",
+                "index_var": null,
+                "collection": "tables",
+                "body": [
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "unary_op",
+                      "op": "not",
+                      "operand": {
+                        "expr_type": "binary_op",
+                        "op": "==",
+                        "left": {
+                          "expr_type": "record_field",
+                          "target": {
+                            "expr_type": "var_ref",
+                            "name": "existing"
+                          },
+                          "field_name": "name"
+                        },
+                        "right": {
+                          "expr_type": "record_field",
+                          "target": {
+                            "expr_type": "var_ref",
+                            "name": "t"
+                          },
+                          "field_name": "name"
+                        }
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "list_append",
+                        "target": "out",
+                        "value": {
+                          "expr_type": "var_ref",
+                          "name": "existing"
+                        },
+                        "source_line": 65
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 64
+                  }
+                ],
+                "source_line": 63
+              },
+              {
+                "op": "list_append",
+                "target": "out",
+                "value": {
+                  "expr_type": "var_ref",
+                  "name": "t"
+                },
+                "source_line": 66
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "var_ref",
+                  "name": "out"
+                },
+                "source_line": 67
+              }
+            ],
+            "source_line": 61
+          }
+        ],
+        "module_files": {
+          "csvstore.meme": "ca8320e1b28c6ee8a6dfcebb88d14acf99fc9709af7b6fc6ce0929908ac10b2a"
+        }
+      },
+      "module_files": {
+        "csvstore.meme": "ca8320e1b28c6ee8a6dfcebb88d14acf99fc9709af7b6fc6ce0929908ac10b2a"
+      }
+    }
+  }
+}

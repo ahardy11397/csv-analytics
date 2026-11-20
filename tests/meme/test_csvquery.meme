@@ -1,0 +1,184 @@
+# Tests for csvquery: count/sum/min/max, avg rendering (2 decimals), where
+# filters, group-by (sorted keys), join, column lookup, non-numeric rejection.
+# All answers hand-computed from the fixed fixtures below.
+use csvquery
+
+# fixture rows for region,amount,qty:
+#   east,10,1 / west,20,2 / east,5,3 / north,7,1 / west,-3,2
+
+function sales_rows() -> List<List<String>>:
+    define header: List<String> as ["region", "amount", "qty"]
+    define r1: List<String> as ["east", "10", "1"]
+    define r2: List<String> as ["west", "20", "2"]
+    define r3: List<String> as ["east", "5", "3"]
+    define r4: List<String> as ["north", "7", "1"]
+    define r5: List<String> as ["west", "-3", "2"]
+    define rows: List<List<String>> as [header, r1, r2, r3, r4, r5]
+    return rows
+
+test column_index:
+    define header: List<String> as ["region", "amount", "qty"]
+    assert column_index(header, "amount") == 1
+    assert column_index(header, "qty") == 2
+    assert column_index(header, "nope") == -1
+
+test is_integer_text:
+    assert is_integer_text("42")
+    assert is_integer_text("-3")
+    assert is_integer_text(" 7 ")
+    assert not (is_integer_text("1.5"))
+    assert not (is_integer_text("abc"))
+    assert not (is_integer_text(""))
+    assert not (is_integer_text("1,2"))
+
+test count_all_and_filtered:
+    define rows: List<List<String>> as sales_rows()
+    define n: Int as count_rows(rows, -1, "")
+    assert n == 5
+    define eastIdx: Int as column_index(rows[0], "region")
+    define ne: Int as count_rows(rows, eastIdx, "east")
+    assert ne == 2
+    define nz: Int as count_rows(rows, eastIdx, "zealand")
+    assert nz == 0
+
+test sum_min_max:
+    define rows: List<List<String>> as sales_rows()
+    define amt: Int as column_index(rows[0], "amount")
+    define s: Optional<Int> as aggregate(rows, amt, "amount", "sum", -1, "")
+    define sv: Int as value of s
+    assert sv == 39
+    define mn: Optional<Int> as aggregate(rows, amt, "amount", "min", -1, "")
+    define mv: Int as value of mn
+    assert mv == -3
+    define mx: Optional<Int> as aggregate(rows, amt, "amount", "max", -1, "")
+    define xv: Int as value of mx
+    assert xv == 20
+
+test aggregate_with_filter:
+    define rows: List<List<String>> as sales_rows()
+    define amt: Int as column_index(rows[0], "amount")
+    define reg: Int as column_index(rows[0], "region")
+    define s: Optional<Int> as aggregate(rows, amt, "amount", "sum", reg, "east")
+    define sv: Int as value of s
+    assert sv == 15
+    define mx: Optional<Int> as aggregate(rows, amt, "amount", "max", reg, "west")
+    define xv: Int as value of mx
+    assert xv == 20
+    define mn: Optional<Int> as aggregate(rows, amt, "amount", "min", reg, "north")
+    define nv: Int as value of mn
+    assert nv == 7
+
+test aggregate_empty_sum_zero:
+    define rows: List<List<String>> as sales_rows()
+    define amt: Int as column_index(rows[0], "amount")
+    define reg: Int as column_index(rows[0], "region")
+    define s: Optional<Int> as aggregate(rows, amt, "amount", "sum", reg, "atlantis")
+    define sv: Int as value of s
+    assert sv == 0
+
+test aggregate_empty_min_max_nothing:
+    define rows: List<List<String>> as sales_rows()
+    define amt: Int as column_index(rows[0], "amount")
+    define reg: Int as column_index(rows[0], "region")
+    define mn: Optional<Int> as aggregate(rows, amt, "amount", "min", reg, "atlantis")
+    assert mn is nothing
+    define mx: Optional<Int> as aggregate(rows, amt, "amount", "max", reg, "atlantis")
+    assert mx is nothing
+
+test avg_formatting:
+    assert format_avg_2dp(39, 5) == "7.80"
+    assert format_avg_2dp(1, 3) == "0.33"
+    assert format_avg_2dp(2, 3) == "0.67"
+    assert format_avg_2dp(15, 2) == "7.50"
+    assert format_avg_2dp(5, 10) == "0.50"
+    assert format_avg_2dp(0, 4) == "0.00"
+    assert format_avg_2dp(7, 3) == "2.33"
+    assert format_avg_2dp(8, 3) == "2.67"
+    assert format_avg_2dp(1, 8) == "0.13"
+    assert format_avg_2dp(-3, 2) == "-1.50"
+    assert format_avg_2dp(-1, 3) == "-0.33"
+    assert format_avg_2dp(-1, 8) == "-0.13"
+    assert format_avg_2dp(7, 2) == "3.50"
+
+test avg_value:
+    define rows: List<List<String>> as sales_rows()
+    define amt: Int as column_index(rows[0], "amount")
+    define a: String as avg_value(rows, amt, "amount", -1, "")
+    assert a == "7.80"
+    define reg: Int as column_index(rows[0], "region")
+    define b: String as avg_value(rows, amt, "amount", reg, "east")
+    assert b == "7.50"
+
+test group_sum_sorted_keys:
+    define rows: List<List<String>> as sales_rows()
+    define reg: Int as column_index(rows[0], "region")
+    define amt: Int as column_index(rows[0], "amount")
+    define groups: Map<String, Int> as group_aggregate(rows, reg, amt, "amount", "sum")
+    # iteration over a map is in sorted key order
+    define keys: List<String> as empty List<String>
+    for each k in groups:
+        add k to keys
+    assert length of keys == 3
+    assert keys[0] == "east"
+    assert keys[1] == "north"
+    assert keys[2] == "west"
+    assert groups["east"] == 15
+    assert groups["north"] == 7
+    assert groups["west"] == 17
+
+test group_min_max_count:
+    define rows: List<List<String>> as sales_rows()
+    define reg: Int as column_index(rows[0], "region")
+    define amt: Int as column_index(rows[0], "amount")
+    define mins: Map<String, Int> as group_aggregate(rows, reg, amt, "amount", "min")
+    assert mins["west"] == -3
+    assert mins["east"] == 5
+    define counts: Map<String, Int> as group_aggregate(rows, reg, -1, "", "count")
+    assert counts["east"] == 2
+    assert counts["north"] == 1
+    assert counts["west"] == 2
+
+test group_min_first_value_zero:
+    define header: List<String> as ["region", "amount"]
+    define r1: List<String> as ["east", "0"]
+    define r2: List<String> as ["east", "5"]
+    define r3: List<String> as ["west", "2"]
+    define rows: List<List<String>> as [header, r1, r2, r3]
+    define reg: Int as column_index(rows[0], "region")
+    define amt: Int as column_index(rows[0], "amount")
+    define mins: Map<String, Int> as group_aggregate(rows, reg, amt, "amount", "min")
+    assert mins["east"] == 0
+    define maxes: Map<String, Int> as group_aggregate(rows, reg, amt, "amount", "max")
+    assert maxes["east"] == 5
+    define sums: Map<String, Int> as group_aggregate(rows, reg, amt, "amount", "sum")
+    assert sums["east"] == 5
+
+test rows_where:
+    define rows: List<List<String>> as sales_rows()
+    define amt: Int as column_index(rows[0], "amount")
+    define filtered: List<List<String>> as rows_where(rows, amt, "20")
+    assert length of filtered == 1
+    assert filtered[0][0] == "west"
+    define none: List<List<String>> as rows_where(rows, amt, "999")
+    assert length of none == 0
+
+test join_tables:
+    define aHeader: List<String> as ["region", "amount"]
+    define a1: List<String> as ["east", "10"]
+    define a2: List<String> as ["west", "20"]
+    define a3: List<String> as ["south", "1"]
+    define aRows: List<List<String>> as [aHeader, a1, a2, a3]
+    define bHeader: List<String> as ["region", "mgr"]
+    define b1: List<String> as ["east", "ann"]
+    define b2: List<String> as ["west", "bob"]
+    define bRows: List<List<String>> as [bHeader, b1, b2]
+    define joined: List<List<String>> as join_tables(aRows, bRows, 0, 0)
+    assert length of joined == 3
+    assert joined[0][0] == "region"
+    assert joined[0][1] == "amount"
+    assert joined[0][2] == "mgr"
+    assert joined[1][0] == "east"
+    assert joined[1][1] == "10"
+    assert joined[1][2] == "ann"
+    assert joined[2][0] == "west"
+    assert joined[2][2] == "bob"

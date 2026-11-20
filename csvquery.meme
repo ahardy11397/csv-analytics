@@ -1,0 +1,172 @@
+# csvquery.meme — counting, filtering, integer aggregation, group-by, join.
+# All aggregation is Int-only; non-integer cells fail with a one-line error.
+# Averages are rendered with 2 decimals via pure Int arithmetic
+# (half-away-from-zero rounding, matching `format`'s documented semantics).
+
+function column_index(header: List<String>, name: String) -> Int:
+    for i from 0 to length of header - 1:
+        if header[i] == name:
+            return i
+    return -1
+
+function is_integer_text(s: String) -> Bool:
+    define t as trim s
+    define n as length of string t
+    if n == 0:
+        return false
+    define start as 0
+    if char at 0 of t == "-":
+        set start to 1
+    if start == 1 and n == 1:
+        return false
+    for i from start to n - 1:
+        if not (is digit char at i of t):
+            return false
+    return true
+
+function parse_cell_int(cell: String, colName: String) -> Int:
+    if not (is_integer_text(cell)):
+        fail with "Error: column '" + colName + "' has non-integer value '" + cell + "'"
+    return integer value of cell
+
+function count_rows(rows: List<List<String>>, filterIdx: Int, filterValue: String) -> Int:
+    define n as 0
+    for i from 1 to length of rows - 1:
+        if filterIdx < 0:
+            set n to n + 1
+        else:
+            if rows[i][filterIdx] == filterValue:
+                set n to n + 1
+    return n
+
+function rows_where(rows: List<List<String>>, idx: Int, value: String) -> List<List<String>>:
+    define out as empty List<List<String>>
+    for i from 1 to length of rows - 1:
+        if rows[i][idx] == value:
+            add rows[i] to out
+    return out
+
+function aggregate(rows: List<List<String>>, colIdx: Int, colName: String, op: String, filterIdx: Int, filterValue: String) -> Optional<Int>:
+    define have as false
+    define acc as 0
+    for i from 1 to length of rows - 1:
+        if filterIdx < 0 or rows[i][filterIdx] == filterValue:
+            if op == "count":
+                set acc to acc + 1
+                set have to true
+            else:
+                if op == "sum":
+                    define v: Int as parse_cell_int(rows[i][colIdx], colName)
+                    set acc to acc + v
+                    set have to true
+                else if op == "min":
+                    define v: Int as parse_cell_int(rows[i][colIdx], colName)
+                    if not have:
+                        set acc to v
+                        set have to true
+                    else:
+                        if v < acc:
+                            set acc to v
+                else if op == "max":
+                    define v: Int as parse_cell_int(rows[i][colIdx], colName)
+                    if not have:
+                        set acc to v
+                        set have to true
+                    else:
+                        if v > acc:
+                            set acc to v
+                else:
+                    fail with "Error: unknown aggregation '" + op + "'"
+    if op == "sum" or op == "count":
+        return optional acc
+    if have:
+        return optional acc
+    return nothing
+
+function format_avg_2dp(total: Int, count: Int) -> String:
+    # hundredths of the mean, rounded half away from zero
+    define scaled as total * 100
+    define q as scaled / count
+    define r as scaled % count
+    define neg as q < 0 or (q == 0 and r < 0)
+    define aq as q
+    if aq < 0:
+        set aq to 0 - aq
+    define ar as r
+    if ar < 0:
+        set ar to 0 - ar
+    if ar * 2 >= count:
+        set aq to aq + 1
+    define whole as aq / 100
+    define cents as aq % 100
+    define frac as text of cents
+    if cents < 10:
+        set frac to "0" + frac
+    if neg:
+        return "-" + text of whole + "." + frac
+    return text of whole + "." + frac
+
+function avg_value(rows: List<List<String>>, colIdx: Int, colName: String, filterIdx: Int, filterValue: String) -> String:
+    define total as 0
+    define n as 0
+    for i from 1 to length of rows - 1:
+        if filterIdx < 0 or rows[i][filterIdx] == filterValue:
+            define v: Int as parse_cell_int(rows[i][colIdx], colName)
+            set total to total + v
+            set n to n + 1
+    if n == 0:
+        fail with "Error: no rows to average for column '" + colName + "'"
+    return format_avg_2dp(total, n)
+
+function group_aggregate(rows: List<List<String>>, groupIdx: Int, valueIdx: Int, valueName: String, op: String) -> Map<String, Int>:
+    define out as empty Map<String, Int>
+    for i from 1 to length of rows - 1:
+        define key as rows[i][groupIdx]
+        define cur: Int as out[key] default 0
+        if op == "count":
+            set out[key] to cur + 1
+        else:
+            define v: Int as parse_cell_int(rows[i][valueIdx], valueName)
+            if op == "sum":
+                set out[key] to cur + v
+            else if op == "min":
+                if cur == 0 and not (out has key key):
+                    set out[key] to v
+                else:
+                    if v < cur:
+                        set out[key] to v
+            else if op == "max":
+                if cur == 0 and not (out has key key):
+                    set out[key] to v
+                else:
+                    if v > cur:
+                        set out[key] to v
+            else:
+                fail with "Error: unknown aggregation '" + op + "'"
+    return out
+
+function join_tables(aRows: List<List<String>>, bRows: List<List<String>>, aIdx: Int, bIdx: Int) -> List<List<String>>:
+    define out as empty List<List<String>>
+    define aHeader as aRows[0]
+    define bHeader as bRows[0]
+    define header as empty List<String>
+    for i from 0 to length of aHeader - 1:
+        add aHeader[i] to header
+    for j from 0 to length of bHeader - 1:
+        if not (j == bIdx):
+            add bHeader[j] to header
+    add header to out
+    for i from 1 to length of aRows - 1:
+        define aRow as aRows[i]
+        define key as aRow[aIdx]
+        for j from 1 to length of bRows - 1:
+            define bRow as bRows[j]
+            if bRow[bIdx] == key:
+                define combined as empty List<String>
+                for k from 0 to length of aRow - 1:
+                    add aRow[k] to combined
+                for k from 0 to length of bRow - 1:
+                    if not (k == bIdx):
+                        add bRow[k] to combined
+                add combined to out
+    return out

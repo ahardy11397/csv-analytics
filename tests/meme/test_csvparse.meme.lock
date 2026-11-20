@@ -1,0 +1,5456 @@
+{
+  "lockfile_version": 1,
+  "entries": {
+    "tests/meme/test_csvparse.meme": {
+      "source_sha256": "0bddd32d63265df74117513bce0809312914935e954c6863eccc7446a902fddb",
+      "provider": "heuristic",
+      "resolutions": {},
+      "pending_ambiguities": [],
+      "draft_items": [
+        {
+          "op": "import_stmt",
+          "module": "csvparse",
+          "source_line": 3
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_simple",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\n1,2\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 6
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 7,
+              "source_text": "length of rows == 2"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 8,
+              "source_text": "rows[0][0] == \"a\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "b",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 9,
+              "source_text": "rows[0][1] == \"b\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "1",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 10,
+              "source_text": "rows[1][0] == \"1\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "2",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 11,
+              "source_text": "rows[1][1] == \"2\""
+            }
+          ],
+          "source_line": 5
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_quoted_comma_and_quotes",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "name,note\n\"x,y\",\"say \"\"hi\"\"\"\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 14
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "x,y",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 15,
+              "source_text": "rows[1][0] == \"x,y\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "say \"hi\"",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 16,
+              "source_text": "rows[1][1] == \"say \\\"hi\\\"\""
+            }
+          ],
+          "source_line": 13
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_quoted_embedded_newline",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\n\"line1\nline2\",z\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 19
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "line1\nline2",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 20,
+              "source_text": "rows[1][0] == \"line1\\nline2\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "z",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 21,
+              "source_text": "rows[1][1] == \"z\""
+            }
+          ],
+          "source_line": 18
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_crlf",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\r\n1,2\r\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 24
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 25,
+              "source_text": "length of rows == 2"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "b",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 26,
+              "source_text": "rows[0][1] == \"b\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "1",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 27,
+              "source_text": "rows[1][0] == \"1\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "2",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 28,
+              "source_text": "rows[1][1] == \"2\""
+            }
+          ],
+          "source_line": 23
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_no_trailing_newline",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\n1,2",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 31
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 32,
+              "source_text": "length of rows == 2"
+            }
+          ],
+          "source_line": 30
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_blank_line_skipped",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\n\n1,2\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 35
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 36,
+              "source_text": "length of rows == 2"
+            }
+          ],
+          "source_line": 34
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_empty_text",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 39
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 40,
+              "source_text": "length of rows == 0"
+            }
+          ],
+          "source_line": 38
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_single_field_rows",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "x\ny\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 43
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 44,
+              "source_text": "length of rows == 2"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "x",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 45,
+              "source_text": "rows[0][0] == \"x\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "y",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 46,
+              "source_text": "rows[1][0] == \"y\""
+            }
+          ],
+          "source_line": 42
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "parse_empty_field_between_commas",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,,c\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 49
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 50,
+              "source_text": "rows[0][0] == \"a\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 51,
+              "source_text": "rows[0][1] == \"\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "c",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 52,
+              "source_text": "rows[0][2] == \"c\""
+            }
+          ],
+          "source_line": 48
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "rectangular_check",
+          "body": [
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "call",
+                "func_name": "rows_are_rectangular",
+                "args": [
+                  {
+                    "expr_type": "call",
+                    "func_name": "parse_csv",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "a,b\n1,2\n",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "source_line": 55,
+              "source_text": "rows_are_rectangular(parse_csv(\"a,b\\n1,2\\n\"))"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "unary_op",
+                "op": "not",
+                "operand": {
+                  "expr_type": "call",
+                  "func_name": "rows_are_rectangular",
+                  "args": [
+                    {
+                      "expr_type": "call",
+                      "func_name": "parse_csv",
+                      "args": [
+                        {
+                          "expr_type": "literal",
+                          "value": "a,b\n1\n",
+                          "data_type": "String"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "source_line": 56,
+              "source_text": "not (rows_are_rectangular(parse_csv(\"a,b\\n1\\n\")))"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "call",
+                "func_name": "rows_are_rectangular",
+                "args": [
+                  {
+                    "expr_type": "call",
+                    "func_name": "parse_csv",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "source_line": 57,
+              "source_text": "rows_are_rectangular(parse_csv(\"\"))"
+            }
+          ],
+          "source_line": 54
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "row_to_line_plain",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "row",
+              "var_type": "List<String>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a",
+                    "data_type": "String"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "b",
+                    "data_type": "String"
+                  }
+                ],
+                "element_type": "String"
+              },
+              "source_line": 60
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "call",
+                  "func_name": "csv_row_to_line",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "row"
+                    }
+                  ]
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a,b",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 61,
+              "source_text": "csv_row_to_line(row) == \"a,b\""
+            }
+          ],
+          "source_line": 59
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "row_to_line_quotes_and_commas",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "row",
+              "var_type": "List<String>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [
+                  {
+                    "expr_type": "literal",
+                    "value": "x",
+                    "data_type": "String"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "y,z",
+                    "data_type": "String"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "a\"b",
+                    "data_type": "String"
+                  },
+                  {
+                    "expr_type": "literal",
+                    "value": "p\nq",
+                    "data_type": "String"
+                  }
+                ],
+                "element_type": "String"
+              },
+              "source_line": 64
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "call",
+                  "func_name": "csv_row_to_line",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "row"
+                    }
+                  ]
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "x,\"y,z\",\"a\"\"b\",\"p\nq\"",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 65,
+              "source_text": "csv_row_to_line(row) == \"x,\\\"y,z\\\",\\\"a\\\"\\\"b\\\",\\\"p\\nq\\\"\""
+            }
+          ],
+          "source_line": 63
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "row_to_line_single",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "row",
+              "var_type": "List<String>",
+              "value": {
+                "expr_type": "list_literal",
+                "elements": [
+                  {
+                    "expr_type": "literal",
+                    "value": "plain",
+                    "data_type": "String"
+                  }
+                ],
+                "element_type": "String"
+              },
+              "source_line": 68
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "call",
+                  "func_name": "csv_row_to_line",
+                  "args": [
+                    {
+                      "expr_type": "var_ref",
+                      "name": "row"
+                    }
+                  ]
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "plain",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 69,
+              "source_text": "csv_row_to_line(row) == \"plain\""
+            }
+          ],
+          "source_line": 67
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "mid_field_quote_is_literal",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\n1,x\"y\n2,3\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 72
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 3,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 73,
+              "source_text": "length of rows == 3"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "1",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 74,
+              "source_text": "rows[1][0] == \"1\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "x\"y",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 75,
+              "source_text": "rows[1][1] == \"x\\\"y\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 2,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "2",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 76,
+              "source_text": "rows[2][0] == \"2\""
+            }
+          ],
+          "source_line": 71
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "post_close_text_is_kept",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "\"a\"x\"b\",c\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 79
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 1,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 80,
+              "source_text": "length of rows == 1"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "ax\"b\"",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 81,
+              "source_text": "rows[0][0] == \"ax\\\"b\\\"\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "c",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 82,
+              "source_text": "rows[0][1] == \"c\""
+            }
+          ],
+          "source_line": 78
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "unterminated_quote_at_eof_tolerated",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,\"b",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 85
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 1,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 86,
+              "source_text": "length of rows == 1"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "a",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 87,
+              "source_text": "rows[0][0] == \"a\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "b",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 88,
+              "source_text": "rows[0][1] == \"b\""
+            }
+          ],
+          "source_line": 84
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "trailing_comma_row",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b,\n1,2,3\n",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 91
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 92,
+              "source_text": "length of rows == 2"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 3,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 93,
+              "source_text": "length of rows[0] == 3"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 94,
+              "source_text": "rows[0][2] == \"\""
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "3",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 95,
+              "source_text": "rows[1][2] == \"3\""
+            }
+          ],
+          "source_line": 90
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "lone_cr_line_end",
+          "body": [
+            {
+              "op": "var_decl",
+              "name": "rows",
+              "var_type": "List<List<String>>",
+              "value": {
+                "expr_type": "call",
+                "func_name": "parse_csv",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a,b\r1,2\r",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 98
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "rows"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": 2,
+                  "data_type": "Int"
+                }
+              },
+              "source_line": 99,
+              "source_text": "length of rows == 2"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "binary_op",
+                "op": "==",
+                "left": {
+                  "expr_type": "list_index",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "index": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "right": {
+                  "expr_type": "literal",
+                  "value": "2",
+                  "data_type": "String"
+                }
+              },
+              "source_line": 100,
+              "source_text": "rows[1][1] == \"2\""
+            }
+          ],
+          "source_line": 97
+        },
+        {
+          "op": "test_block_stmt",
+          "name": "control_char_detection",
+          "body": [
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "call",
+                "func_name": "text_has_control_chars",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "a\u0001b",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 103,
+              "source_text": "text_has_control_chars(\"a\\x01b\")"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "call",
+                "func_name": "text_has_control_chars",
+                "args": [
+                  {
+                    "expr_type": "literal",
+                    "value": "form\ffeed",
+                    "data_type": "String"
+                  }
+                ]
+              },
+              "source_line": 104,
+              "source_text": "text_has_control_chars(\"form\\x0cfeed\")"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "unary_op",
+                "op": "not",
+                "operand": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "plain ascii",
+                      "data_type": "String"
+                    }
+                  ]
+                }
+              },
+              "source_line": 105,
+              "source_text": "not (text_has_control_chars(\"plain ascii\"))"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "unary_op",
+                "op": "not",
+                "operand": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "tab\tok",
+                      "data_type": "String"
+                    }
+                  ]
+                }
+              },
+              "source_line": 106,
+              "source_text": "not (text_has_control_chars(\"tab\\tok\"))"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "unary_op",
+                "op": "not",
+                "operand": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "nl\nok",
+                      "data_type": "String"
+                    }
+                  ]
+                }
+              },
+              "source_line": 107,
+              "source_text": "not (text_has_control_chars(\"nl\\nok\"))"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "unary_op",
+                "op": "not",
+                "operand": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "cr\rok",
+                      "data_type": "String"
+                    }
+                  ]
+                }
+              },
+              "source_line": 108,
+              "source_text": "not (text_has_control_chars(\"cr\\rok\"))"
+            },
+            {
+              "op": "assert_stmt",
+              "condition": {
+                "expr_type": "unary_op",
+                "op": "not",
+                "operand": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "",
+                      "data_type": "String"
+                    }
+                  ]
+                }
+              },
+              "source_line": 109,
+              "source_text": "not (text_has_control_chars(\"\"))"
+            }
+          ],
+          "source_line": 102
+        }
+      ],
+      "canonical_meme": "use csvparse\ntest parse_simple:\n    define list rows as parse_csv(\"a,b\\n1,2\\n\")\n    assert length of rows == 2\n    assert rows[0][0] == \"a\"\n    assert rows[0][1] == \"b\"\n    assert rows[1][0] == \"1\"\n    assert rows[1][1] == \"2\"\ntest parse_quoted_comma_and_quotes:\n    define list rows as parse_csv(\"name,note\\n\\\"x,y\\\",\\\"say \\\"\\\"hi\\\"\\\"\\\"\\n\")\n    assert rows[1][0] == \"x,y\"\n    assert rows[1][1] == \"say \\\"hi\\\"\"\ntest parse_quoted_embedded_newline:\n    define list rows as parse_csv(\"a,b\\n\\\"line1\\nline2\\\",z\\n\")\n    assert rows[1][0] == \"line1\\nline2\"\n    assert rows[1][1] == \"z\"\ntest parse_crlf:\n    define list rows as parse_csv(\"a,b\\r\\n1,2\\r\\n\")\n    assert length of rows == 2\n    assert rows[0][1] == \"b\"\n    assert rows[1][0] == \"1\"\n    assert rows[1][1] == \"2\"\ntest parse_no_trailing_newline:\n    define list rows as parse_csv(\"a,b\\n1,2\")\n    assert length of rows == 2\ntest parse_blank_line_skipped:\n    define list rows as parse_csv(\"a,b\\n\\n1,2\\n\")\n    assert length of rows == 2\ntest parse_empty_text:\n    define list rows as parse_csv(\"\")\n    assert length of rows == 0\ntest parse_single_field_rows:\n    define list rows as parse_csv(\"x\\ny\\n\")\n    assert length of rows == 2\n    assert rows[0][0] == \"x\"\n    assert rows[1][0] == \"y\"\ntest parse_empty_field_between_commas:\n    define list rows as parse_csv(\"a,,c\\n\")\n    assert rows[0][0] == \"a\"\n    assert rows[0][1] == \"\"\n    assert rows[0][2] == \"c\"\ntest rectangular_check:\n    assert rows_are_rectangular(parse_csv(\"a,b\\n1,2\\n\"))\n    assert not rows_are_rectangular(parse_csv(\"a,b\\n1\\n\"))\n    assert rows_are_rectangular(parse_csv(\"\"))\ntest row_to_line_plain:\n    define list row as [\"a\", \"b\"]\n    assert csv_row_to_line(row) == \"a,b\"\ntest row_to_line_quotes_and_commas:\n    define list row as [\"x\", \"y,z\", \"a\\\"b\", \"p\\nq\"]\n    assert csv_row_to_line(row) == \"x,\\\"y,z\\\",\\\"a\\\"\\\"b\\\",\\\"p\\nq\\\"\"\ntest row_to_line_single:\n    define list row as [\"plain\"]\n    assert csv_row_to_line(row) == \"plain\"\ntest mid_field_quote_is_literal:\n    define list rows as parse_csv(\"a,b\\n1,x\\\"y\\n2,3\\n\")\n    assert length of rows == 3\n    assert rows[1][0] == \"1\"\n    assert rows[1][1] == \"x\\\"y\"\n    assert rows[2][0] == \"2\"\ntest post_close_text_is_kept:\n    define list rows as parse_csv(\"\\\"a\\\"x\\\"b\\\",c\\n\")\n    assert length of rows == 1\n    assert rows[0][0] == \"ax\\\"b\\\"\"\n    assert rows[0][1] == \"c\"\ntest unterminated_quote_at_eof_tolerated:\n    define list rows as parse_csv(\"a,\\\"b\")\n    assert length of rows == 1\n    assert rows[0][0] == \"a\"\n    assert rows[0][1] == \"b\"\ntest trailing_comma_row:\n    define list rows as parse_csv(\"a,b,\\n1,2,3\\n\")\n    assert length of rows == 2\n    assert length of rows[0] == 3\n    assert rows[0][2] == \"\"\n    assert rows[1][2] == \"3\"\ntest lone_cr_line_end:\n    define list rows as parse_csv(\"a,b\\r1,2\\r\")\n    assert length of rows == 2\n    assert rows[1][1] == \"2\"\ntest control_char_detection:\n    assert text_has_control_chars(\"a\\u0001b\")\n    assert text_has_control_chars(\"form\\ffeed\")\n    assert not text_has_control_chars(\"plain ascii\")\n    assert not text_has_control_chars(\"tab\\tok\")\n    assert not text_has_control_chars(\"nl\\nok\")\n    assert not text_has_control_chars(\"cr\\rok\")\n    assert not text_has_control_chars(\"\")",
+      "ir": {
+        "statements": [
+          {
+            "op": "import_stmt",
+            "module": "csvparse",
+            "source_line": 3
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_simple",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\n1,2\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 6
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 7,
+                "source_text": "length of rows == 2"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 8,
+                "source_text": "rows[0][0] == \"a\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "b",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 9,
+                "source_text": "rows[0][1] == \"b\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "1",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 10,
+                "source_text": "rows[1][0] == \"1\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "2",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 11,
+                "source_text": "rows[1][1] == \"2\""
+              }
+            ],
+            "source_line": 5
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_quoted_comma_and_quotes",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "name,note\n\"x,y\",\"say \"\"hi\"\"\"\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 14
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "x,y",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 15,
+                "source_text": "rows[1][0] == \"x,y\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "say \"hi\"",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 16,
+                "source_text": "rows[1][1] == \"say \\\"hi\\\"\""
+              }
+            ],
+            "source_line": 13
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_quoted_embedded_newline",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\n\"line1\nline2\",z\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 19
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "line1\nline2",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 20,
+                "source_text": "rows[1][0] == \"line1\\nline2\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "z",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 21,
+                "source_text": "rows[1][1] == \"z\""
+              }
+            ],
+            "source_line": 18
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_crlf",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\r\n1,2\r\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 24
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 25,
+                "source_text": "length of rows == 2"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "b",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 26,
+                "source_text": "rows[0][1] == \"b\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "1",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 27,
+                "source_text": "rows[1][0] == \"1\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "2",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 28,
+                "source_text": "rows[1][1] == \"2\""
+              }
+            ],
+            "source_line": 23
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_no_trailing_newline",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\n1,2",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 31
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 32,
+                "source_text": "length of rows == 2"
+              }
+            ],
+            "source_line": 30
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_blank_line_skipped",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\n\n1,2\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 35
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 36,
+                "source_text": "length of rows == 2"
+              }
+            ],
+            "source_line": 34
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_empty_text",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 39
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 0,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 40,
+                "source_text": "length of rows == 0"
+              }
+            ],
+            "source_line": 38
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_single_field_rows",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "x\ny\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 43
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 44,
+                "source_text": "length of rows == 2"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "x",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 45,
+                "source_text": "rows[0][0] == \"x\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "y",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 46,
+                "source_text": "rows[1][0] == \"y\""
+              }
+            ],
+            "source_line": 42
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "parse_empty_field_between_commas",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,,c\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 49
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 50,
+                "source_text": "rows[0][0] == \"a\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 51,
+                "source_text": "rows[0][1] == \"\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 2,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "c",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 52,
+                "source_text": "rows[0][2] == \"c\""
+              }
+            ],
+            "source_line": 48
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "rectangular_check",
+            "body": [
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "call",
+                  "func_name": "rows_are_rectangular",
+                  "args": [
+                    {
+                      "expr_type": "call",
+                      "func_name": "parse_csv",
+                      "args": [
+                        {
+                          "expr_type": "literal",
+                          "value": "a,b\n1,2\n",
+                          "data_type": "String"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "source_line": 55,
+                "source_text": "rows_are_rectangular(parse_csv(\"a,b\\n1,2\\n\"))"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "call",
+                    "func_name": "rows_are_rectangular",
+                    "args": [
+                      {
+                        "expr_type": "call",
+                        "func_name": "parse_csv",
+                        "args": [
+                          {
+                            "expr_type": "literal",
+                            "value": "a,b\n1\n",
+                            "data_type": "String"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "source_line": 56,
+                "source_text": "not (rows_are_rectangular(parse_csv(\"a,b\\n1\\n\")))"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "call",
+                  "func_name": "rows_are_rectangular",
+                  "args": [
+                    {
+                      "expr_type": "call",
+                      "func_name": "parse_csv",
+                      "args": [
+                        {
+                          "expr_type": "literal",
+                          "value": "",
+                          "data_type": "String"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "source_line": 57,
+                "source_text": "rows_are_rectangular(parse_csv(\"\"))"
+              }
+            ],
+            "source_line": 54
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "row_to_line_plain",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "row",
+                "var_type": "List<String>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a",
+                      "data_type": "String"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "b",
+                      "data_type": "String"
+                    }
+                  ],
+                  "element_type": "String"
+                },
+                "source_line": 60
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "call",
+                    "func_name": "csv_row_to_line",
+                    "args": [
+                      {
+                        "expr_type": "var_ref",
+                        "name": "row"
+                      }
+                    ]
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a,b",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 61,
+                "source_text": "csv_row_to_line(row) == \"a,b\""
+              }
+            ],
+            "source_line": 59
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "row_to_line_quotes_and_commas",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "row",
+                "var_type": "List<String>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [
+                    {
+                      "expr_type": "literal",
+                      "value": "x",
+                      "data_type": "String"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "y,z",
+                      "data_type": "String"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "a\"b",
+                      "data_type": "String"
+                    },
+                    {
+                      "expr_type": "literal",
+                      "value": "p\nq",
+                      "data_type": "String"
+                    }
+                  ],
+                  "element_type": "String"
+                },
+                "source_line": 64
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "call",
+                    "func_name": "csv_row_to_line",
+                    "args": [
+                      {
+                        "expr_type": "var_ref",
+                        "name": "row"
+                      }
+                    ]
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "x,\"y,z\",\"a\"\"b\",\"p\nq\"",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 65,
+                "source_text": "csv_row_to_line(row) == \"x,\\\"y,z\\\",\\\"a\\\"\\\"b\\\",\\\"p\\nq\\\"\""
+              }
+            ],
+            "source_line": 63
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "row_to_line_single",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "row",
+                "var_type": "List<String>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [
+                    {
+                      "expr_type": "literal",
+                      "value": "plain",
+                      "data_type": "String"
+                    }
+                  ],
+                  "element_type": "String"
+                },
+                "source_line": 68
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "call",
+                    "func_name": "csv_row_to_line",
+                    "args": [
+                      {
+                        "expr_type": "var_ref",
+                        "name": "row"
+                      }
+                    ]
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "plain",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 69,
+                "source_text": "csv_row_to_line(row) == \"plain\""
+              }
+            ],
+            "source_line": 67
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "mid_field_quote_is_literal",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\n1,x\"y\n2,3\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 72
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 3,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 73,
+                "source_text": "length of rows == 3"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "1",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 74,
+                "source_text": "rows[1][0] == \"1\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "x\"y",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 75,
+                "source_text": "rows[1][1] == \"x\\\"y\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 2,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "2",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 76,
+                "source_text": "rows[2][0] == \"2\""
+              }
+            ],
+            "source_line": 71
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "post_close_text_is_kept",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "\"a\"x\"b\",c\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 79
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 80,
+                "source_text": "length of rows == 1"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "ax\"b\"",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 81,
+                "source_text": "rows[0][0] == \"ax\\\"b\\\"\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "c",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 82,
+                "source_text": "rows[0][1] == \"c\""
+              }
+            ],
+            "source_line": 78
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "unterminated_quote_at_eof_tolerated",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,\"b",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 85
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 86,
+                "source_text": "length of rows == 1"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "a",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 87,
+                "source_text": "rows[0][0] == \"a\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "b",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 88,
+                "source_text": "rows[0][1] == \"b\""
+              }
+            ],
+            "source_line": 84
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "trailing_comma_row",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b,\n1,2,3\n",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 91
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 92,
+                "source_text": "length of rows == 2"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 3,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 93,
+                "source_text": "length of rows[0] == 3"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 2,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 94,
+                "source_text": "rows[0][2] == \"\""
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 2,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "3",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 95,
+                "source_text": "rows[1][2] == \"3\""
+              }
+            ],
+            "source_line": 90
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "lone_cr_line_end",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "call",
+                  "func_name": "parse_csv",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a,b\r1,2\r",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 98
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 2,
+                    "data_type": "Int"
+                  }
+                },
+                "source_line": 99,
+                "source_text": "length of rows == 2"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "==",
+                  "left": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "rows"
+                      },
+                      "index": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 1,
+                      "data_type": "Int"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": "2",
+                    "data_type": "String"
+                  }
+                },
+                "source_line": 100,
+                "source_text": "rows[1][1] == \"2\""
+              }
+            ],
+            "source_line": 97
+          },
+          {
+            "op": "test_block_stmt",
+            "name": "control_char_detection",
+            "body": [
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "a\u0001b",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 103,
+                "source_text": "text_has_control_chars(\"a\\x01b\")"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "call",
+                  "func_name": "text_has_control_chars",
+                  "args": [
+                    {
+                      "expr_type": "literal",
+                      "value": "form\ffeed",
+                      "data_type": "String"
+                    }
+                  ]
+                },
+                "source_line": 104,
+                "source_text": "text_has_control_chars(\"form\\x0cfeed\")"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "call",
+                    "func_name": "text_has_control_chars",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "plain ascii",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                },
+                "source_line": 105,
+                "source_text": "not (text_has_control_chars(\"plain ascii\"))"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "call",
+                    "func_name": "text_has_control_chars",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "tab\tok",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                },
+                "source_line": 106,
+                "source_text": "not (text_has_control_chars(\"tab\\tok\"))"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "call",
+                    "func_name": "text_has_control_chars",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "nl\nok",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                },
+                "source_line": 107,
+                "source_text": "not (text_has_control_chars(\"nl\\nok\"))"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "call",
+                    "func_name": "text_has_control_chars",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "cr\rok",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                },
+                "source_line": 108,
+                "source_text": "not (text_has_control_chars(\"cr\\rok\"))"
+              },
+              {
+                "op": "assert_stmt",
+                "condition": {
+                  "expr_type": "unary_op",
+                  "op": "not",
+                  "operand": {
+                    "expr_type": "call",
+                    "func_name": "text_has_control_chars",
+                    "args": [
+                      {
+                        "expr_type": "literal",
+                        "value": "",
+                        "data_type": "String"
+                      }
+                    ]
+                  }
+                },
+                "source_line": 109,
+                "source_text": "not (text_has_control_chars(\"\"))"
+              }
+            ],
+            "source_line": 102
+          }
+        ],
+        "imported_definitions": [
+          {
+            "op": "func_def",
+            "name": "parse_csv",
+            "params": [
+              {
+                "name": "text",
+                "param_type": "String"
+              }
+            ],
+            "return_type": "List<List<String>>",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "rows",
+                "var_type": "List<List<String>>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [],
+                  "element_type": "List<String>"
+                },
+                "source_line": 8
+              },
+              {
+                "op": "var_decl",
+                "name": "row",
+                "var_type": "List<String>",
+                "value": {
+                  "expr_type": "list_literal",
+                  "elements": [],
+                  "element_type": "String"
+                },
+                "source_line": 9
+              },
+              {
+                "op": "var_decl",
+                "name": "field",
+                "var_type": "String",
+                "value": {
+                  "expr_type": "literal",
+                  "value": "",
+                  "data_type": "String"
+                },
+                "source_line": 10
+              },
+              {
+                "op": "var_decl",
+                "name": "i",
+                "var_type": "Int",
+                "value": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                },
+                "source_line": 11
+              },
+              {
+                "op": "var_decl",
+                "name": "n",
+                "var_type": "Int",
+                "value": {
+                  "expr_type": "string_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "text"
+                  }
+                },
+                "source_line": 12
+              },
+              {
+                "op": "var_decl",
+                "name": "in_quotes",
+                "var_type": "Bool",
+                "value": {
+                  "expr_type": "literal",
+                  "value": false,
+                  "data_type": "Bool"
+                },
+                "source_line": 13
+              },
+              {
+                "op": "var_decl",
+                "name": "row_started",
+                "var_type": "Bool",
+                "value": {
+                  "expr_type": "literal",
+                  "value": false,
+                  "data_type": "Bool"
+                },
+                "source_line": 14
+              },
+              {
+                "op": "var_decl",
+                "name": "field_started",
+                "var_type": "Bool",
+                "value": {
+                  "expr_type": "literal",
+                  "value": false,
+                  "data_type": "Bool"
+                },
+                "source_line": 15
+              },
+              {
+                "op": "while_loop",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "<",
+                  "left": {
+                    "expr_type": "var_ref",
+                    "name": "i"
+                  },
+                  "right": {
+                    "expr_type": "var_ref",
+                    "name": "n"
+                  }
+                },
+                "body": [
+                  {
+                    "op": "var_decl",
+                    "name": "c",
+                    "var_type": "String",
+                    "value": {
+                      "expr_type": "string_char_at",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "text"
+                      },
+                      "index": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      }
+                    },
+                    "source_line": 17
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "var_ref",
+                      "name": "in_quotes"
+                    },
+                    "then_body": [
+                      {
+                        "op": "if_stmt",
+                        "condition": {
+                          "expr_type": "binary_op",
+                          "op": "==",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "c"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": "\"",
+                            "data_type": "String"
+                          }
+                        },
+                        "then_body": [
+                          {
+                            "op": "if_stmt",
+                            "condition": {
+                              "expr_type": "binary_op",
+                              "op": "<",
+                              "left": {
+                                "expr_type": "binary_op",
+                                "op": "+",
+                                "left": {
+                                  "expr_type": "var_ref",
+                                  "name": "i"
+                                },
+                                "right": {
+                                  "expr_type": "literal",
+                                  "value": 1,
+                                  "data_type": "Int"
+                                }
+                              },
+                              "right": {
+                                "expr_type": "var_ref",
+                                "name": "n"
+                              }
+                            },
+                            "then_body": [
+                              {
+                                "op": "if_stmt",
+                                "condition": {
+                                  "expr_type": "binary_op",
+                                  "op": "==",
+                                  "left": {
+                                    "expr_type": "string_char_at",
+                                    "target": {
+                                      "expr_type": "var_ref",
+                                      "name": "text"
+                                    },
+                                    "index": {
+                                      "expr_type": "binary_op",
+                                      "op": "+",
+                                      "left": {
+                                        "expr_type": "var_ref",
+                                        "name": "i"
+                                      },
+                                      "right": {
+                                        "expr_type": "literal",
+                                        "value": 1,
+                                        "data_type": "Int"
+                                      }
+                                    }
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": "\"",
+                                    "data_type": "String"
+                                  }
+                                },
+                                "then_body": [
+                                  {
+                                    "op": "assign",
+                                    "name": "field",
+                                    "value": {
+                                      "expr_type": "binary_op",
+                                      "op": "+",
+                                      "left": {
+                                        "expr_type": "var_ref",
+                                        "name": "field"
+                                      },
+                                      "right": {
+                                        "expr_type": "literal",
+                                        "value": "\"",
+                                        "data_type": "String"
+                                      }
+                                    },
+                                    "source_line": 22
+                                  },
+                                  {
+                                    "op": "assign",
+                                    "name": "field_started",
+                                    "value": {
+                                      "expr_type": "literal",
+                                      "value": true,
+                                      "data_type": "Bool"
+                                    },
+                                    "source_line": 23
+                                  },
+                                  {
+                                    "op": "assign",
+                                    "name": "i",
+                                    "value": {
+                                      "expr_type": "binary_op",
+                                      "op": "+",
+                                      "left": {
+                                        "expr_type": "var_ref",
+                                        "name": "i"
+                                      },
+                                      "right": {
+                                        "expr_type": "literal",
+                                        "value": 2,
+                                        "data_type": "Int"
+                                      }
+                                    },
+                                    "source_line": 24
+                                  },
+                                  {
+                                    "op": "loop_continue",
+                                    "source_line": 25
+                                  }
+                                ],
+                                "else_body": [
+                                  {
+                                    "op": "assign",
+                                    "name": "in_quotes",
+                                    "value": {
+                                      "expr_type": "literal",
+                                      "value": false,
+                                      "data_type": "Bool"
+                                    },
+                                    "source_line": 27
+                                  },
+                                  {
+                                    "op": "assign",
+                                    "name": "i",
+                                    "value": {
+                                      "expr_type": "binary_op",
+                                      "op": "+",
+                                      "left": {
+                                        "expr_type": "var_ref",
+                                        "name": "i"
+                                      },
+                                      "right": {
+                                        "expr_type": "literal",
+                                        "value": 1,
+                                        "data_type": "Int"
+                                      }
+                                    },
+                                    "source_line": 28
+                                  },
+                                  {
+                                    "op": "loop_continue",
+                                    "source_line": 29
+                                  }
+                                ],
+                                "source_line": 21
+                              }
+                            ],
+                            "else_body": [
+                              {
+                                "op": "assign",
+                                "name": "in_quotes",
+                                "value": {
+                                  "expr_type": "literal",
+                                  "value": false,
+                                  "data_type": "Bool"
+                                },
+                                "source_line": 32
+                              },
+                              {
+                                "op": "assign",
+                                "name": "i",
+                                "value": {
+                                  "expr_type": "binary_op",
+                                  "op": "+",
+                                  "left": {
+                                    "expr_type": "var_ref",
+                                    "name": "i"
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": 1,
+                                    "data_type": "Int"
+                                  }
+                                },
+                                "source_line": 33
+                              },
+                              {
+                                "op": "loop_continue",
+                                "source_line": 34
+                              }
+                            ],
+                            "source_line": 20
+                          }
+                        ],
+                        "else_body": [
+                          {
+                            "op": "assign",
+                            "name": "field",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "field"
+                              },
+                              "right": {
+                                "expr_type": "var_ref",
+                                "name": "c"
+                              }
+                            },
+                            "source_line": 36
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": true,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 37
+                          },
+                          {
+                            "op": "assign",
+                            "name": "i",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "i"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": 1,
+                                "data_type": "Int"
+                              }
+                            },
+                            "source_line": 38
+                          },
+                          {
+                            "op": "loop_continue",
+                            "source_line": 39
+                          }
+                        ],
+                        "source_line": 19
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 18
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\"",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "if_stmt",
+                        "condition": {
+                          "expr_type": "unary_op",
+                          "op": "not",
+                          "operand": {
+                            "expr_type": "var_ref",
+                            "name": "field_started"
+                          }
+                        },
+                        "then_body": [
+                          {
+                            "op": "assign",
+                            "name": "in_quotes",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": true,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 44
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": true,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 45
+                          },
+                          {
+                            "op": "assign",
+                            "name": "row_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": true,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 46
+                          },
+                          {
+                            "op": "assign",
+                            "name": "i",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "i"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": 1,
+                                "data_type": "Int"
+                              }
+                            },
+                            "source_line": 47
+                          },
+                          {
+                            "op": "loop_continue",
+                            "source_line": 48
+                          }
+                        ],
+                        "else_body": [
+                          {
+                            "op": "assign",
+                            "name": "field",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "field"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": "\"",
+                                "data_type": "String"
+                              }
+                            },
+                            "source_line": 50
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": true,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 51
+                          },
+                          {
+                            "op": "assign",
+                            "name": "row_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": true,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 52
+                          },
+                          {
+                            "op": "assign",
+                            "name": "i",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "i"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": 1,
+                                "data_type": "Int"
+                              }
+                            },
+                            "source_line": 53
+                          },
+                          {
+                            "op": "loop_continue",
+                            "source_line": 54
+                          }
+                        ],
+                        "source_line": 43
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 40
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": ",",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "list_append",
+                        "target": "row",
+                        "value": {
+                          "expr_type": "var_ref",
+                          "name": "field"
+                        },
+                        "source_line": 56
+                      },
+                      {
+                        "op": "assign",
+                        "name": "field",
+                        "value": {
+                          "expr_type": "literal",
+                          "value": "",
+                          "data_type": "String"
+                        },
+                        "source_line": 57
+                      },
+                      {
+                        "op": "assign",
+                        "name": "field_started",
+                        "value": {
+                          "expr_type": "literal",
+                          "value": false,
+                          "data_type": "Bool"
+                        },
+                        "source_line": 58
+                      },
+                      {
+                        "op": "assign",
+                        "name": "row_started",
+                        "value": {
+                          "expr_type": "literal",
+                          "value": true,
+                          "data_type": "Bool"
+                        },
+                        "source_line": 59
+                      },
+                      {
+                        "op": "assign",
+                        "name": "i",
+                        "value": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "i"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": 1,
+                            "data_type": "Int"
+                          }
+                        },
+                        "source_line": 60
+                      },
+                      {
+                        "op": "loop_continue",
+                        "source_line": 61
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 55
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\n",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "if_stmt",
+                        "condition": {
+                          "expr_type": "var_ref",
+                          "name": "row_started"
+                        },
+                        "then_body": [
+                          {
+                            "op": "list_append",
+                            "target": "row",
+                            "value": {
+                              "expr_type": "var_ref",
+                              "name": "field"
+                            },
+                            "source_line": 64
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": "",
+                              "data_type": "String"
+                            },
+                            "source_line": 65
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": false,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 66
+                          },
+                          {
+                            "op": "list_append",
+                            "target": "rows",
+                            "value": {
+                              "expr_type": "var_ref",
+                              "name": "row"
+                            },
+                            "source_line": 67
+                          },
+                          {
+                            "op": "assign",
+                            "name": "row",
+                            "value": {
+                              "expr_type": "list_literal",
+                              "elements": [],
+                              "element_type": "String"
+                            },
+                            "source_line": 68
+                          },
+                          {
+                            "op": "assign",
+                            "name": "row_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": false,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 69
+                          }
+                        ],
+                        "else_body": [],
+                        "source_line": 63
+                      },
+                      {
+                        "op": "assign",
+                        "name": "i",
+                        "value": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "i"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": 1,
+                            "data_type": "Int"
+                          }
+                        },
+                        "source_line": 70
+                      },
+                      {
+                        "op": "loop_continue",
+                        "source_line": 71
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 62
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\r",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "if_stmt",
+                        "condition": {
+                          "expr_type": "binary_op",
+                          "op": "<",
+                          "left": {
+                            "expr_type": "binary_op",
+                            "op": "+",
+                            "left": {
+                              "expr_type": "var_ref",
+                              "name": "i"
+                            },
+                            "right": {
+                              "expr_type": "literal",
+                              "value": 1,
+                              "data_type": "Int"
+                            }
+                          },
+                          "right": {
+                            "expr_type": "var_ref",
+                            "name": "n"
+                          }
+                        },
+                        "then_body": [
+                          {
+                            "op": "if_stmt",
+                            "condition": {
+                              "expr_type": "binary_op",
+                              "op": "==",
+                              "left": {
+                                "expr_type": "string_char_at",
+                                "target": {
+                                  "expr_type": "var_ref",
+                                  "name": "text"
+                                },
+                                "index": {
+                                  "expr_type": "binary_op",
+                                  "op": "+",
+                                  "left": {
+                                    "expr_type": "var_ref",
+                                    "name": "i"
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": 1,
+                                    "data_type": "Int"
+                                  }
+                                }
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": "\n",
+                                "data_type": "String"
+                              }
+                            },
+                            "then_body": [
+                              {
+                                "op": "assign",
+                                "name": "i",
+                                "value": {
+                                  "expr_type": "binary_op",
+                                  "op": "+",
+                                  "left": {
+                                    "expr_type": "var_ref",
+                                    "name": "i"
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": 2,
+                                    "data_type": "Int"
+                                  }
+                                },
+                                "source_line": 76
+                              }
+                            ],
+                            "else_body": [
+                              {
+                                "op": "assign",
+                                "name": "i",
+                                "value": {
+                                  "expr_type": "binary_op",
+                                  "op": "+",
+                                  "left": {
+                                    "expr_type": "var_ref",
+                                    "name": "i"
+                                  },
+                                  "right": {
+                                    "expr_type": "literal",
+                                    "value": 1,
+                                    "data_type": "Int"
+                                  }
+                                },
+                                "source_line": 78
+                              }
+                            ],
+                            "source_line": 75
+                          }
+                        ],
+                        "else_body": [
+                          {
+                            "op": "assign",
+                            "name": "i",
+                            "value": {
+                              "expr_type": "binary_op",
+                              "op": "+",
+                              "left": {
+                                "expr_type": "var_ref",
+                                "name": "i"
+                              },
+                              "right": {
+                                "expr_type": "literal",
+                                "value": 1,
+                                "data_type": "Int"
+                              }
+                            },
+                            "source_line": 80
+                          }
+                        ],
+                        "source_line": 74
+                      },
+                      {
+                        "op": "if_stmt",
+                        "condition": {
+                          "expr_type": "var_ref",
+                          "name": "row_started"
+                        },
+                        "then_body": [
+                          {
+                            "op": "list_append",
+                            "target": "row",
+                            "value": {
+                              "expr_type": "var_ref",
+                              "name": "field"
+                            },
+                            "source_line": 82
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": "",
+                              "data_type": "String"
+                            },
+                            "source_line": 83
+                          },
+                          {
+                            "op": "assign",
+                            "name": "field_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": false,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 84
+                          },
+                          {
+                            "op": "list_append",
+                            "target": "rows",
+                            "value": {
+                              "expr_type": "var_ref",
+                              "name": "row"
+                            },
+                            "source_line": 85
+                          },
+                          {
+                            "op": "assign",
+                            "name": "row",
+                            "value": {
+                              "expr_type": "list_literal",
+                              "elements": [],
+                              "element_type": "String"
+                            },
+                            "source_line": 86
+                          },
+                          {
+                            "op": "assign",
+                            "name": "row_started",
+                            "value": {
+                              "expr_type": "literal",
+                              "value": false,
+                              "data_type": "Bool"
+                            },
+                            "source_line": 87
+                          }
+                        ],
+                        "else_body": [],
+                        "source_line": 81
+                      },
+                      {
+                        "op": "loop_continue",
+                        "source_line": 88
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 72
+                  },
+                  {
+                    "op": "assign",
+                    "name": "field",
+                    "value": {
+                      "expr_type": "binary_op",
+                      "op": "+",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "field"
+                      },
+                      "right": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      }
+                    },
+                    "source_line": 89
+                  },
+                  {
+                    "op": "assign",
+                    "name": "field_started",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 90
+                  },
+                  {
+                    "op": "assign",
+                    "name": "row_started",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 91
+                  },
+                  {
+                    "op": "assign",
+                    "name": "i",
+                    "value": {
+                      "expr_type": "binary_op",
+                      "op": "+",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": 1,
+                        "data_type": "Int"
+                      }
+                    },
+                    "source_line": 92
+                  }
+                ],
+                "source_line": 16
+              },
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "var_ref",
+                  "name": "row_started"
+                },
+                "then_body": [
+                  {
+                    "op": "list_append",
+                    "target": "row",
+                    "value": {
+                      "expr_type": "var_ref",
+                      "name": "field"
+                    },
+                    "source_line": 94
+                  },
+                  {
+                    "op": "list_append",
+                    "target": "rows",
+                    "value": {
+                      "expr_type": "var_ref",
+                      "name": "row"
+                    },
+                    "source_line": 95
+                  }
+                ],
+                "else_body": [],
+                "source_line": 93
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "var_ref",
+                  "name": "rows"
+                },
+                "source_line": 96
+              }
+            ],
+            "source_line": 7
+          },
+          {
+            "op": "func_def",
+            "name": "rows_are_rectangular",
+            "params": [
+              {
+                "name": "rows",
+                "param_type": "List<List<String>>"
+              }
+            ],
+            "return_type": "Bool",
+            "body": [
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "binary_op",
+                  "op": "<=",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 100
+                  }
+                ],
+                "else_body": [],
+                "source_line": 99
+              },
+              {
+                "op": "var_decl",
+                "name": "width",
+                "var_type": "Int",
+                "value": {
+                  "expr_type": "list_length",
+                  "target": {
+                    "expr_type": "list_index",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    },
+                    "index": {
+                      "expr_type": "literal",
+                      "value": 0,
+                      "data_type": "Int"
+                    }
+                  }
+                },
+                "source_line": 101
+              },
+              {
+                "op": "for_range",
+                "loop_var": "i",
+                "start": {
+                  "expr_type": "literal",
+                  "value": 1,
+                  "data_type": "Int"
+                },
+                "end": {
+                  "expr_type": "binary_op",
+                  "op": "-",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "rows"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "body": [
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "!=",
+                      "left": {
+                        "expr_type": "list_length",
+                        "target": {
+                          "expr_type": "list_index",
+                          "target": {
+                            "expr_type": "var_ref",
+                            "name": "rows"
+                          },
+                          "index": {
+                            "expr_type": "var_ref",
+                            "name": "i"
+                          }
+                        }
+                      },
+                      "right": {
+                        "expr_type": "var_ref",
+                        "name": "width"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "return_stmt",
+                        "value": {
+                          "expr_type": "literal",
+                          "value": false,
+                          "data_type": "Bool"
+                        },
+                        "source_line": 104
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 103
+                  }
+                ],
+                "source_line": 102
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "literal",
+                  "value": true,
+                  "data_type": "Bool"
+                },
+                "source_line": 105
+              }
+            ],
+            "source_line": 98
+          },
+          {
+            "op": "func_def",
+            "name": "field_needs_quotes",
+            "params": [
+              {
+                "name": "field",
+                "param_type": "String"
+              }
+            ],
+            "return_type": "Bool",
+            "body": [
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "str_contains",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "field"
+                  },
+                  "substring": {
+                    "expr_type": "literal",
+                    "value": ",",
+                    "data_type": "String"
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 109
+                  }
+                ],
+                "else_body": [],
+                "source_line": 108
+              },
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "str_contains",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "field"
+                  },
+                  "substring": {
+                    "expr_type": "literal",
+                    "value": "\"",
+                    "data_type": "String"
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 111
+                  }
+                ],
+                "else_body": [],
+                "source_line": 110
+              },
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "str_contains",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "field"
+                  },
+                  "substring": {
+                    "expr_type": "literal",
+                    "value": "\n",
+                    "data_type": "String"
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 113
+                  }
+                ],
+                "else_body": [],
+                "source_line": 112
+              },
+              {
+                "op": "if_stmt",
+                "condition": {
+                  "expr_type": "str_contains",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "field"
+                  },
+                  "substring": {
+                    "expr_type": "literal",
+                    "value": "\r",
+                    "data_type": "String"
+                  }
+                },
+                "then_body": [
+                  {
+                    "op": "return_stmt",
+                    "value": {
+                      "expr_type": "literal",
+                      "value": true,
+                      "data_type": "Bool"
+                    },
+                    "source_line": 115
+                  }
+                ],
+                "else_body": [],
+                "source_line": 114
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "literal",
+                  "value": false,
+                  "data_type": "Bool"
+                },
+                "source_line": 116
+              }
+            ],
+            "source_line": 107
+          },
+          {
+            "op": "func_def",
+            "name": "text_has_control_chars",
+            "params": [
+              {
+                "name": "s",
+                "param_type": "String"
+              }
+            ],
+            "return_type": "Bool",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "n",
+                "var_type": "Int",
+                "value": {
+                  "expr_type": "string_length",
+                  "target": {
+                    "expr_type": "var_ref",
+                    "name": "s"
+                  }
+                },
+                "source_line": 122
+              },
+              {
+                "op": "for_range",
+                "loop_var": "i",
+                "start": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                },
+                "end": {
+                  "expr_type": "binary_op",
+                  "op": "-",
+                  "left": {
+                    "expr_type": "var_ref",
+                    "name": "n"
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "body": [
+                  {
+                    "op": "var_decl",
+                    "name": "c",
+                    "var_type": "String",
+                    "value": {
+                      "expr_type": "string_char_at",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "s"
+                      },
+                      "index": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      }
+                    },
+                    "source_line": 124
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\t",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "loop_continue",
+                        "source_line": 126
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 125
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\n",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "loop_continue",
+                        "source_line": 128
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 127
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "==",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": "\r",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "loop_continue",
+                        "source_line": 130
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 129
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": "<",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "c"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": " ",
+                        "data_type": "String"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "return_stmt",
+                        "value": {
+                          "expr_type": "literal",
+                          "value": true,
+                          "data_type": "Bool"
+                        },
+                        "source_line": 132
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 131
+                  }
+                ],
+                "source_line": 123
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "literal",
+                  "value": false,
+                  "data_type": "Bool"
+                },
+                "source_line": 133
+              }
+            ],
+            "source_line": 118
+          },
+          {
+            "op": "func_def",
+            "name": "csv_row_to_line",
+            "params": [
+              {
+                "name": "row",
+                "param_type": "List<String>"
+              }
+            ],
+            "return_type": "String",
+            "body": [
+              {
+                "op": "var_decl",
+                "name": "line",
+                "var_type": "String",
+                "value": {
+                  "expr_type": "literal",
+                  "value": "",
+                  "data_type": "String"
+                },
+                "source_line": 136
+              },
+              {
+                "op": "for_range",
+                "loop_var": "i",
+                "start": {
+                  "expr_type": "literal",
+                  "value": 0,
+                  "data_type": "Int"
+                },
+                "end": {
+                  "expr_type": "binary_op",
+                  "op": "-",
+                  "left": {
+                    "expr_type": "list_length",
+                    "target": {
+                      "expr_type": "var_ref",
+                      "name": "row"
+                    }
+                  },
+                  "right": {
+                    "expr_type": "literal",
+                    "value": 1,
+                    "data_type": "Int"
+                  }
+                },
+                "body": [
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "binary_op",
+                      "op": ">",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      },
+                      "right": {
+                        "expr_type": "literal",
+                        "value": 0,
+                        "data_type": "Int"
+                      }
+                    },
+                    "then_body": [
+                      {
+                        "op": "assign",
+                        "name": "line",
+                        "value": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "var_ref",
+                            "name": "line"
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": ",",
+                            "data_type": "String"
+                          }
+                        },
+                        "source_line": 139
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 138
+                  },
+                  {
+                    "op": "var_decl",
+                    "name": "field",
+                    "var_type": "String",
+                    "value": {
+                      "expr_type": "list_index",
+                      "target": {
+                        "expr_type": "var_ref",
+                        "name": "row"
+                      },
+                      "index": {
+                        "expr_type": "var_ref",
+                        "name": "i"
+                      }
+                    },
+                    "source_line": 140
+                  },
+                  {
+                    "op": "if_stmt",
+                    "condition": {
+                      "expr_type": "call",
+                      "func_name": "field_needs_quotes",
+                      "args": [
+                        {
+                          "expr_type": "var_ref",
+                          "name": "field"
+                        }
+                      ]
+                    },
+                    "then_body": [
+                      {
+                        "op": "assign",
+                        "name": "field",
+                        "value": {
+                          "expr_type": "string_replace",
+                          "target": {
+                            "expr_type": "var_ref",
+                            "name": "field"
+                          },
+                          "old": {
+                            "expr_type": "literal",
+                            "value": "\"",
+                            "data_type": "String"
+                          },
+                          "new": {
+                            "expr_type": "literal",
+                            "value": "\"\"",
+                            "data_type": "String"
+                          }
+                        },
+                        "source_line": 142
+                      },
+                      {
+                        "op": "assign",
+                        "name": "field",
+                        "value": {
+                          "expr_type": "binary_op",
+                          "op": "+",
+                          "left": {
+                            "expr_type": "binary_op",
+                            "op": "+",
+                            "left": {
+                              "expr_type": "literal",
+                              "value": "\"",
+                              "data_type": "String"
+                            },
+                            "right": {
+                              "expr_type": "var_ref",
+                              "name": "field"
+                            }
+                          },
+                          "right": {
+                            "expr_type": "literal",
+                            "value": "\"",
+                            "data_type": "String"
+                          }
+                        },
+                        "source_line": 143
+                      }
+                    ],
+                    "else_body": [],
+                    "source_line": 141
+                  },
+                  {
+                    "op": "assign",
+                    "name": "line",
+                    "value": {
+                      "expr_type": "binary_op",
+                      "op": "+",
+                      "left": {
+                        "expr_type": "var_ref",
+                        "name": "line"
+                      },
+                      "right": {
+                        "expr_type": "var_ref",
+                        "name": "field"
+                      }
+                    },
+                    "source_line": 144
+                  }
+                ],
+                "source_line": 137
+              },
+              {
+                "op": "return_stmt",
+                "value": {
+                  "expr_type": "var_ref",
+                  "name": "line"
+                },
+                "source_line": 145
+              }
+            ],
+            "source_line": 135
+          }
+        ],
+        "module_files": {
+          "csvparse.meme": "ca5c0f5e6a9c70cc9fb10f828755a303830421f18acb295c77c65627f047db0f"
+        }
+      },
+      "module_files": {
+        "csvparse.meme": "ca5c0f5e6a9c70cc9fb10f828755a303830421f18acb295c77c65627f047db0f"
+      }
+    }
+  }
+}

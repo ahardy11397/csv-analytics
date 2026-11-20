@@ -1,0 +1,145 @@
+# csvparse.meme — RFC-4180-lite CSV parsing and rendering.
+# Dialect: comma-separated; fields may be double-quoted; a quoted field may
+# contain commas, newlines (\n or \r\n), and escaped quotes (""). Blank lines
+# (zero characters between line breaks) are skipped. \r\n and \n line endings
+# are both accepted.
+
+function parse_csv(text: String) -> List<List<String>>:
+    define rows as empty List<List<String>>
+    define row as empty List<String>
+    define field as ""
+    define i as 0
+    define n as length of string text
+    define in_quotes as false
+    define row_started as false
+    define field_started as false
+    while i < n:
+        define c as char at i of text
+        if in_quotes:
+            if c == "\"":
+                if i + 1 < n:
+                    if char at (i + 1) of text == "\"":
+                        set field to field + "\""
+                        set field_started to true
+                        set i to i + 2
+                        continue
+                    else:
+                        set in_quotes to false
+                        set i to i + 1
+                        continue
+                else:
+                    # unterminated quote at end of input: close it (tolerant)
+                    set in_quotes to false
+                    set i to i + 1
+                    continue
+            else:
+                set field to field + c
+                set field_started to true
+                set i to i + 1
+                continue
+        if c == "\"":
+            # a quote only opens a quoted field at the start of the field;
+            # a mid-field quote is an ordinary character (tolerant dialect)
+            if not field_started:
+                set in_quotes to true
+                set field_started to true
+                set row_started to true
+                set i to i + 1
+                continue
+            else:
+                set field to field + "\""
+                set field_started to true
+                set row_started to true
+                set i to i + 1
+                continue
+        if c == ",":
+            add field to row
+            set field to ""
+            set field_started to false
+            set row_started to true
+            set i to i + 1
+            continue
+        if c == "\n":
+            if row_started:
+                add field to row
+                set field to ""
+                set field_started to false
+                add row to rows
+                set row to empty List<String>
+                set row_started to false
+            set i to i + 1
+            continue
+        if c == "\r":
+            # treat \r\n as one line break; a lone \r also ends the line
+            if i + 1 < n:
+                if char at (i + 1) of text == "\n":
+                    set i to i + 2
+                else:
+                    set i to i + 1
+            else:
+                set i to i + 1
+            if row_started:
+                add field to row
+                set field to ""
+                set field_started to false
+                add row to rows
+                set row to empty List<String>
+                set row_started to false
+            continue
+        set field to field + c
+        set field_started to true
+        set row_started to true
+        set i to i + 1
+    if row_started:
+        add field to row
+        add row to rows
+    return rows
+
+function rows_are_rectangular(rows: List<List<String>>) -> Bool:
+    if length of rows <= 1:
+        return true
+    define width as length of rows[0]
+    for i from 1 to length of rows - 1:
+        if length of rows[i] != width:
+            return false
+    return true
+
+function field_needs_quotes(field: String) -> Bool:
+    if field contains ",":
+        return true
+    if field contains "\"":
+        return true
+    if field contains "\n":
+        return true
+    if field contains "\r":
+        return true
+    return false
+
+function text_has_control_chars(s: String) -> Bool:
+    # true when s contains a code point below U+0020 other than tab, \n, \r
+    # (which the parser and JSON escaper handle). Used to reject such content
+    # at load so the registry can never hold characters that break JSON.
+    define n as length of string s
+    for i from 0 to n - 1:
+        define c as char at i of s
+        if c == "\t":
+            continue
+        if c == "\n":
+            continue
+        if c == "\r":
+            continue
+        if c < " ":
+            return true
+    return false
+
+function csv_row_to_line(row: List<String>) -> String:
+    define line as ""
+    for i from 0 to length of row - 1:
+        if i > 0:
+            set line to line + ","
+        define field as row[i]
+        if field_needs_quotes(field):
+            set field to replace "\"" with "\"\"" in field
+            set field to "\"" + field + "\""
+        set line to line + field
+    return line
