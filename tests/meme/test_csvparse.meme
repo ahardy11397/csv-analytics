@@ -1,6 +1,6 @@
 # Tests for csvparse: RFC-4180-lite parsing (quoted fields, CRLF, blank lines)
 # and CSV row rendering.
-use csvparse
+use ../../csvparse
 
 test parse_simple:
     define rows: List<List<String>> as parse_csv("a,b\n1,2\n")

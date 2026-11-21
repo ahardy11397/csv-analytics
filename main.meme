@@ -1,21 +1,21 @@
 # main.meme — csv: a CSV query/analytics CLI.
 # Thin argv router; logic lives in csvparse, csvstore, and csvquery.
-# Every error is a single "Error: ..." line followed by exit code 1.
+# Every error is a single "Error: ..." line on stderr followed by exit code 1.
 
 use csvparse
 use csvstore
 use csvquery
 
 function print_usage() -> Void:
-    print "Usage: csv <command> [args]"
-    print "  csv load <file> <name>"
-    print "  csv tables"
-    print "  csv head <name> [n]"
-    print "  csv count <name> [column value]"
-    print "  csv sum|avg|min|max <name> <column> [where column value]"
-    print "  csv groupby <name> <group-col> <agg>(<col>)"
-    print "  csv join <a> <b> <column>"
-    print "  csv where <name> <column> <value>"
+    print error "Usage: csv <command> [args]"
+    print error "  csv load <file> <name>"
+    print error "  csv tables"
+    print error "  csv head <name> [n]"
+    print error "  csv count <name> [column value]"
+    print error "  csv sum|avg|min|max <name> <column> [where column value]"
+    print error "  csv groupby <name> <group-col> <agg>(<col>)"
+    print error "  csv join <a> <b> <column>"
+    print error "  csv where <name> <column> <value>"
 
 function registry_path() -> String:
     return "data/tables.json"
@@ -26,12 +26,15 @@ function load_table(name: String) -> Optional<Table>:
 
 function parse_table(t: Table) -> List<List<String>>:
     if text_has_control_chars(t.content):
-        fail with "Error: table '" + t.name + "' contains unsupported control characters"
+        print error "Error: table '" + t.name + "' contains unsupported control characters"
+        exit with code 1
     define rows as parse_csv(t.content)
     if length of rows == 0:
-        fail with "Error: table '" + t.name + "' is empty"
+        print error "Error: table '" + t.name + "' is empty"
+        exit with code 1
     if not (rows_are_rectangular(rows)):
-        fail with "Error: table '" + t.name + "' has ragged rows"
+        print error "Error: table '" + t.name + "' has ragged rows"
+        exit with code 1
     return rows
 
 function table_shape(rows: List<List<String>>) -> String:
@@ -39,22 +42,27 @@ function table_shape(rows: List<List<String>>) -> String:
 
 function run_load(argc: Int) -> Void:
     if argc != 4:
-        print "Usage: csv load <file> <name>"
+        print error "Usage: csv load <file> <name>"
         exit with code 1
     define filepath: String as argument 2
     define name: String as argument 3
     if name contains "/":
-        fail with "Error: table name may not contain '/'"
+        print error "Error: table name may not contain '/'"
+        exit with code 1
     if not (file exists filepath):
-        fail with "Error: cannot read file: " + filepath
+        print error "Error: cannot read file: " + filepath
+        exit with code 1
     define content: String as read string from file filepath
     if text_has_control_chars(content):
-        fail with "Error: file contains unsupported control characters: " + filepath
+        print error "Error: file contains unsupported control characters: " + filepath
+        exit with code 1
     define rows as parse_csv(content)
     if length of rows == 0:
-        fail with "Error: empty CSV file: " + filepath
+        print error "Error: empty CSV file: " + filepath
+        exit with code 1
     if not (rows_are_rectangular(rows)):
-        fail with "Error: ragged rows in file: " + filepath
+        print error "Error: ragged rows in file: " + filepath
+        exit with code 1
     define t: Table as Table(name=name, content=content)
     define tables as load_registry(registry_path())
     define updated as upsert_table(tables, t)
@@ -79,19 +87,21 @@ function run_tables() -> Void:
 
 function run_head(argc: Int) -> Void:
     if argc < 3 or argc > 4:
-        print "Usage: csv head <name> [n]"
+        print error "Usage: csv head <name> [n]"
         exit with code 1
     define name: String as argument 2
     define found: Optional<Table> as load_table(name)
     if found is nothing:
-        fail with "Error: no table named '" + name + "'"
+        print error "Error: no table named '" + name + "'"
+        exit with code 1
     define t: Table as value of found
     define rows as parse_table(t)
     define n as 5
     if argc == 4:
         define ns: String as argument 3
         if not (is_integer_text(ns)):
-            fail with "Error: n must be an integer"
+            print error "Error: n must be an integer"
+            exit with code 1
         set n to integer value of ns
     print csv_row_to_line(rows[0])
     define limit as n
@@ -102,12 +112,13 @@ function run_head(argc: Int) -> Void:
 
 function run_count(argc: Int) -> Void:
     if argc < 3 or argc > 5:
-        print "Usage: csv count <name> [column value]"
+        print error "Usage: csv count <name> [column value]"
         exit with code 1
     define name: String as argument 2
     define found: Optional<Table> as load_table(name)
     if found is nothing:
-        fail with "Error: no table named '" + name + "'"
+        print error "Error: no table named '" + name + "'"
+        exit with code 1
     define t: Table as value of found
     define rows as parse_table(t)
     if argc == 3:
@@ -117,73 +128,87 @@ function run_count(argc: Int) -> Void:
     define value: String as argument 4
     define idx: Int as column_index(rows[0], col)
     if idx < 0:
-        fail with "Error: no column '" + col + "' in table '" + name + "'"
+        print error "Error: no column '" + col + "' in table '" + name + "'"
+        exit with code 1
     print text of count_rows(rows, idx, value)
 
 function run_aggregate(op: String, argc: Int) -> Void:
     if argc < 4 or argc > 7:
-        print "Usage: csv " + op + " <name> <column> [where column value]"
+        print error "Usage: csv " + op + " <name> <column> [where column value]"
         exit with code 1
     if argc == 5 or argc == 6:
-        fail with "Error: expected 'where <column> <value>' after the column"
+        print error "Error: expected 'where <column> <value>' after the column"
+        exit with code 1
     define name: String as argument 2
     define col: String as argument 3
     define found: Optional<Table> as load_table(name)
     if found is nothing:
-        fail with "Error: no table named '" + name + "'"
+        print error "Error: no table named '" + name + "'"
+        exit with code 1
     define t: Table as value of found
     define rows as parse_table(t)
     define colIdx: Int as column_index(rows[0], col)
     if colIdx < 0:
-        fail with "Error: no column '" + col + "' in table '" + name + "'"
+        print error "Error: no column '" + col + "' in table '" + name + "'"
+        exit with code 1
     define filterIdx as -1
     define filterValue as ""
     if argc == 7:
         if not (argument 4 == "where"):
-            fail with "Error: expected 'where <column> <value>'"
+            print error "Error: expected 'where <column> <value>'"
+            exit with code 1
         define fcol: String as argument 5
         set filterValue to argument 6
         set filterIdx to column_index(rows[0], fcol)
         if filterIdx < 0:
-            fail with "Error: no column '" + fcol + "' in table '" + name + "'"
+            print error "Error: no column '" + fcol + "' in table '" + name + "'"
+            exit with code 1
     if op == "avg":
         print avg_value(rows, colIdx, col, filterIdx, filterValue)
         return
     define result: Optional<Int> as aggregate(rows, colIdx, col, op, filterIdx, filterValue)
     if result is nothing:
-        fail with "Error: no rows for column '" + col + "'"
+        print error "Error: no rows for column '" + col + "'"
+        exit with code 1
     print text of value of result
 
 function run_groupby(argc: Int) -> Void:
     if argc != 5:
-        print "Usage: csv groupby <name> <group-col> <agg>(<col>)"
+        print error "Usage: csv groupby <name> <group-col> <agg>(<col>)"
         exit with code 1
     define name: String as argument 2
     define gcol: String as argument 3
     define spec: String as argument 4
     define pos: Int as index of "(" in spec
     if pos < 1:
-        fail with "Error: aggregation must look like sum(amount)"
+        print error "Error: aggregation must look like sum(amount)"
+        exit with code 1
     define aggop as trim (slice spec from 0 to pos)
     define rest as slice spec from pos + 1 to length of string spec
     if not (rest ends with ")"):
-        fail with "Error: aggregation must look like sum(amount)"
+        print error "Error: aggregation must look like sum(amount)"
+        exit with code 1
     define vcol as trim (slice rest from 0 to length of string rest - 1)
     if vcol == "":
-        fail with "Error: aggregation must look like sum(amount)"
+        print error "Error: aggregation must look like sum(amount)"
+        exit with code 1
     if not (aggop == "sum" or aggop == "avg" or aggop == "min" or aggop == "max" or aggop == "count"):
-        fail with "Error: unknown aggregation '" + aggop + "'"
+        print error "Error: unknown aggregation '" + aggop + "'"
+        exit with code 1
     define found: Optional<Table> as load_table(name)
     if found is nothing:
-        fail with "Error: no table named '" + name + "'"
+        print error "Error: no table named '" + name + "'"
+        exit with code 1
     define t: Table as value of found
     define rows as parse_table(t)
     define groupIdx: Int as column_index(rows[0], gcol)
     if groupIdx < 0:
-        fail with "Error: no column '" + gcol + "' in table '" + name + "'"
+        print error "Error: no column '" + gcol + "' in table '" + name + "'"
+        exit with code 1
     define valueIdx: Int as column_index(rows[0], vcol)
     if valueIdx < 0:
-        fail with "Error: no column '" + vcol + "' in table '" + name + "'"
+        print error "Error: no column '" + vcol + "' in table '" + name + "'"
+        exit with code 1
     if aggop == "avg":
         define sums: Map<String, Int> as group_aggregate(rows, groupIdx, valueIdx, vcol, "sum")
         define counts: Map<String, Int> as group_aggregate(rows, groupIdx, -1, "", "count")
@@ -196,17 +221,19 @@ function run_groupby(argc: Int) -> Void:
 
 function run_join(argc: Int) -> Void:
     if argc != 5:
-        print "Usage: csv join <a> <b> <column>"
+        print error "Usage: csv join <a> <b> <column>"
         exit with code 1
     define a: String as argument 2
     define b: String as argument 3
     define col: String as argument 4
     define fa: Optional<Table> as load_table(a)
     if fa is nothing:
-        fail with "Error: no table named '" + a + "'"
+        print error "Error: no table named '" + a + "'"
+        exit with code 1
     define fb: Optional<Table> as load_table(b)
     if fb is nothing:
-        fail with "Error: no table named '" + b + "'"
+        print error "Error: no table named '" + b + "'"
+        exit with code 1
     define ta: Table as value of fa
     define tb: Table as value of fb
     define aRows as parse_table(ta)
@@ -214,32 +241,33 @@ function run_join(argc: Int) -> Void:
     define aIdx: Int as column_index(aRows[0], col)
     define bIdx: Int as column_index(bRows[0], col)
     if aIdx < 0 or bIdx < 0:
-        fail with "Error: join column '" + col + "' must exist in both tables"
-    define joined: List<List<String>> as join_tables(aRows, bRows, aIdx, bIdx)
-    for i from 0 to length of joined - 1:
-        print csv_row_to_line(joined[i])
+        print error "Error: join column '" + col + "' must exist in both tables"
+        exit with code 1
+    for each row in join_tables(aRows, bRows, aIdx, bIdx):
+        print csv_row_to_line(row)
 
 function run_where(argc: Int) -> Void:
     if argc != 5:
-        print "Usage: csv where <name> <column> <value>"
+        print error "Usage: csv where <name> <column> <value>"
         exit with code 1
     define name: String as argument 2
     define col: String as argument 3
     define value: String as argument 4
     define found: Optional<Table> as load_table(name)
     if found is nothing:
-        fail with "Error: no table named '" + name + "'"
+        print error "Error: no table named '" + name + "'"
+        exit with code 1
     define t: Table as value of found
     define rows as parse_table(t)
     define idx: Int as column_index(rows[0], col)
     if idx < 0:
-        fail with "Error: no column '" + col + "' in table '" + name + "'"
+        print error "Error: no column '" + col + "' in table '" + name + "'"
+        exit with code 1
     print csv_row_to_line(rows[0])
-    define filtered: List<List<String>> as rows_where(rows, idx, value)
-    for each row in filtered:
+    for each row in rows_where(rows, idx, value):
         print csv_row_to_line(row)
 
-function main() -> Int:
+function csv_main() -> Int:
     define argc: Int as argument count
     if argc < 2:
         call print_usage()
@@ -273,6 +301,7 @@ function main() -> Int:
             exit with code 1
     return 0
 
-# The structured-English entry point: `function main` is compiled as a plain
-# function, so it is invoked explicitly at top level.
-call main()
+# The structured-English entry point: `function csv_main` is compiled as a
+# plain function (programs may not define `main()`), so it is invoked
+# explicitly at top level.
+call csv_main()

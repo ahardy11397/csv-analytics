@@ -14,11 +14,12 @@ decimals at print time.
 | `csvparse.meme` | RFC-4180-lite CSV parser and row renderer |
 | `csvstore.meme` | table registry: `Table(name, content)` persisted to `data/tables.json` |
 | `csvquery.meme` | count/sum/avg/min/max, group-by, join, where, column lookup |
-| `tests/meme/*.meme` | test blocks run with `meme test` (34 cases) |
+| `tests/meme/*.meme` | test blocks run with `meme test` (41 cases) |
 
-Modules are symlinked into `tests/meme/` (`csvparse.meme` → `../../csvparse.meme`,
-etc.) because Memelang resolves `use <module>` relative to the importing file's
-directory.
+Test files import the root modules with relative parent paths
+(`use ../../csvparse`, `../../csvstore`, `../../csvquery`) — Memelang
+resolves `use` relative to the importing file's directory, so no symlinks
+are needed.
 
 ## Build & run
 
@@ -42,8 +43,9 @@ csv join <a> <b> <column>              # inner join on equal column values
 csv where <name> <column> <value>      # filtered rows (header + rows, CSV out)
 ```
 
-Unknown command: full usage, exit 1. Every error is a single `Error: ...` line
-followed by exit code 1. Successful commands exit 0.
+Unknown command: full usage, exit 1. Every error is a single `Error: ...`
+line on stderr followed by exit code 1 (usage on failed invocation is also
+printed to stderr). Successful commands exit 0.
 
 ## Semantics
 
@@ -71,7 +73,10 @@ followed by exit code 1. Successful commands exit 0.
   whitespace); anything else fails with `Error: column '<x>' has non-integer
   value '<cell>'`. `sum` over zero matching rows is `0`; `min`/`max` over zero
   rows are an error; `avg` over zero rows is an error. `avg` prints two decimals
-  (`7.80`), rounded half away from zero.
+  (`7.80`), rounded half away from zero via the built-in
+  `format float of <mean> with 2 decimals`. A negative mean whose magnitude
+  rounds to zero prints `0.00` (no negative zero; the old integer formatter
+  printed `-0.00` in that corner).
 - **where chains are single-condition only.** `sum sales amount where region
   east`; the keyword `where` is required. Equality is exact string equality.
 - **group-by.** Output is `<key> <value>`, one group per line, sorted by group
@@ -90,7 +95,7 @@ uv run --project /path/to/meme meme test tests/meme --provider heuristic --targe
 # also: --target rust, cpp, go, c, ts  (all six must be green)
 ```
 
-34 test cases across `test_csvparse.meme` (19), `test_csvstore.meme` (8), and
+41 test cases across `test_csvparse.meme` (19), `test_csvstore.meme` (8), and
 `test_csvquery.meme` (14): quoted-field parsing (commas, escaped quotes,
 embedded newlines), mid-field/post-close quote tolerance, unterminated quotes,
 trailing-comma rows, lone-`\r` lines, control-character detection, CRLF
@@ -100,6 +105,6 @@ hand-computed count/sum/min/max, 2-decimal avg rendering (including negatives
 and half-away rounding), filtered aggregates, sorted group-by keys (incl. a
 group whose first value is 0), join with dropped non-matches, where filter,
 and non-integer rejection. Tests use unique scratch files under `tests/tmp/`
-and clean them up. (Note: `meme test` blocks cannot assert process exit codes,
-so the CLI's fail-with-exit-1 paths are verified by the demo/smoke battery, not
-by test blocks.)
+and clean them up. (Note: `meme test` blocks cannot assert process exit codes
+or stderr routing, so the CLI's print-error-and-exit-1 paths are verified by
+the demo/smoke battery, not by test blocks.)

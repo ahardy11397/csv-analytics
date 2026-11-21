@@ -1,7 +1,7 @@
 # csvquery.meme — counting, filtering, integer aggregation, group-by, join.
-# All aggregation is Int-only; non-integer cells fail with a one-line error.
-# Averages are rendered with 2 decimals via pure Int arithmetic
-# (half-away-from-zero rounding, matching `format`'s documented semantics).
+# All aggregation is Int-only; non-integer cells exit with a one-line stderr error.
+# Averages are rendered with 2 decimals via `format float of <mean> with
+# 2 decimals` (half-away-from-zero rounding, `format`'s documented semantics).
 
 function column_index(header: List<String>, name: String) -> Int:
     for i from 0 to length of header - 1:
@@ -26,7 +26,8 @@ function is_integer_text(s: String) -> Bool:
 
 function parse_cell_int(cell: String, colName: String) -> Int:
     if not (is_integer_text(cell)):
-        fail with "Error: column '" + colName + "' has non-integer value '" + cell + "'"
+        print error "Error: column '" + colName + "' has non-integer value '" + cell + "'"
+        exit with code 1
     return integer value of cell
 
 function count_rows(rows: List<List<String>>, filterIdx: Int, filterValue: String) -> Int:
@@ -76,7 +77,8 @@ function aggregate(rows: List<List<String>>, colIdx: Int, colName: String, op: S
                         if v > acc:
                             set acc to v
                 else:
-                    fail with "Error: unknown aggregation '" + op + "'"
+                    print error "Error: unknown aggregation '" + op + "'"
+                    exit with code 1
     if op == "sum" or op == "count":
         return optional acc
     if have:
@@ -84,27 +86,8 @@ function aggregate(rows: List<List<String>>, colIdx: Int, colName: String, op: S
     return nothing
 
 function format_avg_2dp(total: Int, count: Int) -> String:
-    # hundredths of the mean, rounded half away from zero
-    define scaled as total * 100
-    define q as scaled / count
-    define r as scaled % count
-    define neg as q < 0 or (q == 0 and r < 0)
-    define aq as q
-    if aq < 0:
-        set aq to 0 - aq
-    define ar as r
-    if ar < 0:
-        set ar to 0 - ar
-    if ar * 2 >= count:
-        set aq to aq + 1
-    define whole as aq / 100
-    define cents as aq % 100
-    define frac as text of cents
-    if cents < 10:
-        set frac to "0" + frac
-    if neg:
-        return "-" + text of whole + "." + frac
-    return text of whole + "." + frac
+    # mean rendered with 2 decimals, half-away-from-zero (built-in `format`)
+    return format float of total / float of count with 2 decimals
 
 function avg_value(rows: List<List<String>>, colIdx: Int, colName: String, filterIdx: Int, filterValue: String) -> String:
     define total as 0
@@ -115,7 +98,8 @@ function avg_value(rows: List<List<String>>, colIdx: Int, colName: String, filte
             set total to total + v
             set n to n + 1
     if n == 0:
-        fail with "Error: no rows to average for column '" + colName + "'"
+        print error "Error: no rows to average for column '" + colName + "'"
+        exit with code 1
     return format_avg_2dp(total, n)
 
 function group_aggregate(rows: List<List<String>>, groupIdx: Int, valueIdx: Int, valueName: String, op: String) -> Map<String, Int>:
@@ -142,7 +126,8 @@ function group_aggregate(rows: List<List<String>>, groupIdx: Int, valueIdx: Int,
                     if v > cur:
                         set out[key] to v
             else:
-                fail with "Error: unknown aggregation '" + op + "'"
+                print error "Error: unknown aggregation '" + op + "'"
+                exit with code 1
     return out
 
 function join_tables(aRows: List<List<String>>, bRows: List<List<String>>, aIdx: Int, bIdx: Int) -> List<List<String>>:

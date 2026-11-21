@@ -1,6 +1,6 @@
 # Tests for csvstore: registry persistence (hand-written JSON, built-in reader),
 # corrupt-file tolerance, find/upsert semantics. Unique scratch paths, cleaned up.
-use csvstore
+use ../../csvstore
 
 test registry_roundtrip:
     create directory "tests/tmp"

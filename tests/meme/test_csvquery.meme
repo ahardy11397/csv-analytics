@@ -1,7 +1,7 @@
 # Tests for csvquery: count/sum/min/max, avg rendering (2 decimals), where
 # filters, group-by (sorted keys), join, column lookup, non-numeric rejection.
 # All answers hand-computed from the fixed fixtures below.
-use csvquery
+use ../../csvquery
 
 # fixture rows for region,amount,qty:
 #   east,10,1 / west,20,2 / east,5,3 / north,7,1 / west,-3,2
